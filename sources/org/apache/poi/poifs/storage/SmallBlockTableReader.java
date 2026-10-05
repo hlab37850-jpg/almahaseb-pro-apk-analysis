@@ -1,0 +1,13 @@
+package org.apache.poi.poifs.storage;
+
+import org.apache.poi.poifs.common.POIFSBigBlockSize;
+import org.apache.poi.poifs.property.RootProperty;
+
+/* JADX INFO: loaded from: classes4.dex */
+public final class SmallBlockTableReader {
+    public static BlockList getSmallDocumentBlocks(POIFSBigBlockSize pOIFSBigBlockSize, RawDataBlockList rawDataBlockList, RootProperty rootProperty, int i) {
+        SmallDocumentBlockList smallDocumentBlockList = new SmallDocumentBlockList(SmallDocumentBlock.extract(pOIFSBigBlockSize, rawDataBlockList.fetchBlocks(rootProperty.getStartBlock(), -1)));
+        new BlockAllocationTableReader(pOIFSBigBlockSize, rawDataBlockList.fetchBlocks(i, -1), smallDocumentBlockList);
+        return smallDocumentBlockList;
+    }
+}

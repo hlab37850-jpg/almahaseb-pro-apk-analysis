@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="right"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <TableLayout
+        android:id="@+id/bill_det"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+                android:id="@+id/report_hdr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/content_report_input3"/>
+        </TableRow>
+        <View
+            android:id="@+id/primerdivisor_5"
+            android:background="@android:color/background_dark"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
+        <TableRow
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include
+                android:id="@+id/report_hdr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                layout="@layout/content_profit_loss"/>
+        </TableRow>
+    </TableLayout>
+    <View
+        android:id="@+id/primerdivisor_6"
+        android:background="@android:color/background_dark"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+</LinearLayout>

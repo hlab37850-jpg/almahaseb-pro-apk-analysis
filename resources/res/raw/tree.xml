@@ -1,0 +1,48 @@
+<sql>
+
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(1,'اصول',0,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(2,'التزامات وحقوق الملكية',0,1,0,1);</statement>
+    <statement>update account_tree set name='التزامات وحقوق الملكية' where id=2;</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(3,'مصروفات',0,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(4,'ايرادات',0,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(11,'اصول ثابتة',1,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(12,'اصول متداولة',1,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(121,'الصناديق',12,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(122,'البنوك',12,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(123,'العملاء',12,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(124,'اخرى',12,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(125,'البضاعة',12,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(21,'حقوق الملكية',2,1,0,1);</statement>
+    <statement>update account_tree set name='حقوق الملكية' where id='21';</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(23,'التزامات ثابتة',2,1,0,1);</statement>
+    <statement>insert or ignore into account_tree  (id,name,parent_id,p,cus_id,admin) values(211,'راس المال',21,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(212,'الأرباح والخسائر',21,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(213,'المسحوبات ',21,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(214,'المساهمين ',21,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(22,'التزمات متداولة',2,1,0,1);</statement>
+    <statement>update account_tree set name='التزمات متداولة' where id='22' and admin=1;</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(221,'الموردون',22,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(31,'تكاليف النشاط',3,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(311,'المشتريات',31,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(312,'مردودات مبيعات',31,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(313,'الخصم المسموح به',31,1,0,1);</statement>
+	<statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(314,'تسوية المخزون',31,1,0,1);</statement>
+	<statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(315,'الأصناف التالفة',31,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(32,'مصاريف تشغيلية وإدارية',3,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(321,'مصاريف النشاط',32,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(322,'مصاريف عمومية وادارية',32,1,0,1);</statement>
+
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(323,'مصاريف أخرى',32,1,0,1);</statement>
+
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(41,'ايرادات النشاط',4,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(411,'المبيعات',41,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(412,'مردودات مشتريات',41,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(413,'الخصم المكتسب',41,1,0,1);</statement>
+    <statement>insert or ignore into account_tree (id,name,parent_id,p,cus_id,admin)  values(42,'إيرادات أخرى',4,1,0,1);</statement>
+    <statement>update account_tree set admin=0 where id=124;</statement>
+
+
+
+
+
+</sql>

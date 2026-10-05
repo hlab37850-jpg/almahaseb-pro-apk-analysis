@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/edit_cus_interface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
+        <include layout="@layout/customer_det_move_dialog3"/>
+        <View
+            android:id="@+id/primerdivisor1"
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edit_cus_interface">
+        <TextView
+            android:textSize="18sp"
+            android:textColor="#536fd2"
+            android:textColorHighlight="#ffffff"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/emptyResults"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_list"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_cus_det_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/edit_cus_interface"/>
+    </LinearLayout>
+</RelativeLayout>

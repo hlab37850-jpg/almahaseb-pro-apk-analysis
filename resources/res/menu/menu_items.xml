@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/search"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"/>
+    <item
+        android:icon="@drawable/pdf"
+        android:id="@+id/print"
+        android:title="@string/print"
+        app:showAsAction="always"/>
+    <item
+        android:icon="@drawable/excel"
+        android:id="@+id/import_excel"
+        android:title="@string/import_items"
+        app:showAsAction="collapseActionView|ifRoom"/>
+</menu>

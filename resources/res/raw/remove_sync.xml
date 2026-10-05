@@ -1,0 +1,147 @@
+<sql>
+
+	--## v1.136 sync
+	<statement>
+		drop table if exists table_action;
+	</statement>
+	<statement>drop TRIGGER if exists items_sync_insert</statement>
+	<statement>drop TRIGGER if exists items_sync_update</statement>
+	-- transactions (Not bills)
+	<statement>drop TRIGGER if exists transactions_sync_insert</statement>
+	<statement>drop TRIGGER if exists transactions_sync_insert2</statement>
+	<statement>drop TRIGGER if exists transactions_sync_update</statement>
+	<statement>drop TRIGGER if exists transactions_sync_delete</statement>
+
+--bills
+	<statement>drop TRIGGER if exists bills_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists bills_sync_update</statement>
+
+
+	<statement>drop TRIGGER if exists bills_sync_delete</statement>
+
+--bills2
+	<statement>drop TRIGGER if exists bills2_sync_insert</statement>
+
+	--update id as it is not autoincrement
+	<statement>drop TRIGGER if exists bills2_sync_insert_id</statement>
+
+	<statement>drop TRIGGER if exists bills2_sync_update</statement>
+
+	<statement>drop TRIGGER if exists bills2_sync_delete</statement>
+
+	--groups
+	<statement>drop TRIGGER if exists groups_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists groups_sync_update</statement>
+
+	<statement>drop TRIGGER if exists groups_sync_delete</statement>
+
+	--account_tree
+	<statement>drop TRIGGER if exists account_tree_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists account_tree_sync_update</statement>
+
+	<statement>drop TRIGGER if exists account_tree_sync_delete</statement>
+
+	--branches
+	<statement>drop TRIGGER if exists branches_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists branches_sync_update</statement>
+
+	<statement>drop TRIGGER if exists branches_sync_delete</statement>
+
+	--customers
+	<statement>drop TRIGGER if exists customers_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists customers_sync_update</statement>
+
+	<statement>drop TRIGGER if exists customers_sync_delete</statement>
+
+	--currency
+	<statement>drop TRIGGER if exists currency_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists currency_sync_update</statement>
+
+	<statement>drop TRIGGER if exists currency_sync_delete</statement>
+
+	--currency_price
+	<statement>drop TRIGGER if exists currency_price_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists currency_price_sync_update</statement>
+
+	<statement>drop TRIGGER if exists currency_price_sync_delete</statement>
+
+	--item_type
+	<statement>drop TRIGGER if exists item_type_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists item_type_sync_update</statement>
+
+	<statement>drop TRIGGER if exists item_type_sync_delete</statement>
+
+	--units
+	<statement>drop TRIGGER if exists units_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists units_sync_update</statement>
+
+	<statement>drop TRIGGER if exists units_sync_delete</statement>
+
+	--unit_item
+	<statement>drop TRIGGER if exists unit_item_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists unit_item_sync_update</statement>
+
+	<statement>drop TRIGGER if exists unit_item_sync_delete</statement>
+
+	--tax
+	<statement>drop TRIGGER if exists tax_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists tax_sync_update</statement>
+
+	<statement>drop TRIGGER if exists tax_sync_delete</statement>
+
+	--cus_limit
+	<statement>drop TRIGGER if exists cus_limit_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists cus_limit_sync_update</statement>
+
+	<statement>drop TRIGGER if exists cus_limit_sync_delete</statement>
+
+	--reminders
+	<statement>drop TRIGGER if exists reminders_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists reminders_sync_update</statement>
+
+	<statement>drop TRIGGER if exists reminders_sync_delete</statement>
+
+	--item_price
+	<statement>drop TRIGGER if exists item_price_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists item_price_sync_update</statement>
+
+	<statement>drop TRIGGER if exists item_price_sync_delete</statement>
+
+	--users
+	<statement>drop TRIGGER if exists users_sync_insert</statement>
+
+	<statement>drop TRIGGER if exists users_sync_update</statement>
+
+	<statement>drop TRIGGER if exists users_sync_update0</statement>
+
+	--user_priv--only update
+	--with first update
+	<statement>drop TRIGGER if exists user_priv_sync_update_b</statement>
+
+	--without old ref2
+	<statement>drop TRIGGER if exists user_priv_sync_update</statement>
+
+	--closing_year--only insert
+	<statement>drop TRIGGER if exists closing_year_sync_insert</statement>
+	<statement>drop TRIGGER if exists items_sync_update_h</statement>
+	<statement>drop TRIGGER if exists transactions_sync_update_h</statement>
+	<statement>drop TRIGGER if exists transactions_sync_update_h2</statement>
+	<statement>drop TRIGGER if exists bills_sync_update_h</statement>
+	<statement>drop TRIGGER if exists bills2_sync_update_h</statement>
+
+
+</sql>

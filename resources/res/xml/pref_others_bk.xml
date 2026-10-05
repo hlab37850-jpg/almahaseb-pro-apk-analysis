@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:icon="@drawable/s_pc"
+        android:title="@string/pref_other_option_hints"
+        android:key="prefOthers_hints"
+        android:summary="@string/pref_other_option_hints"
+        android:defaultValue="false"/>
+    <Preference
+        android:icon="@drawable/s_clos_bal_y"
+        android:capitalize="words"
+        android:title="@string/pref_close_balance"
+        android:key="prefCloseBalance"
+        android:summary="@string/pref_close_balance"
+        android:defaultValue="@string/pref_default_password"/>
+    <SwitchPreference
+        android:icon="@drawable/s_save_option"
+        android:title="@string/pref_other_option_sales_out_qty"
+        android:key="prefOthers_sales_out_qty"
+        android:summary="@string/pref_other_option_sales_out_qty"
+        android:defaultValue="false"/>
+</PreferenceScreen>

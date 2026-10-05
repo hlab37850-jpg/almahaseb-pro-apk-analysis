@@ -1,0 +1,28 @@
+package com.google.android.datatransport.cct.internal;
+
+import androidx.annotation.NonNull;
+import com.google.auto.value.AutoValue;
+import com.google.firebase.encoders.DataEncoder;
+import com.google.firebase.encoders.annotations.Encodable;
+import com.google.firebase.encoders.json.JsonDataEncoderBuilder;
+import defpackage.C3202k6;
+import java.util.List;
+
+/* JADX INFO: loaded from: classes2.dex */
+@AutoValue
+@Encodable
+public abstract class BatchedLogRequest {
+    @NonNull
+    public static BatchedLogRequest create(@NonNull List<LogRequest> list) {
+        return new C3202k6(list);
+    }
+
+    @NonNull
+    public static DataEncoder createDataEncoder() {
+        return new JsonDataEncoderBuilder().configureWith(AutoBatchedLogRequestEncoder.CONFIG).ignoreNullValues(true).build();
+    }
+
+    @NonNull
+    @Encodable.Field(name = "logRequest")
+    public abstract List<LogRequest> getLogRequests();
+}

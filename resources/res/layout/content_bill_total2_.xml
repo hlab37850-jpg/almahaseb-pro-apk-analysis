@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <EditText
+        android:gravity="center"
+        android:id="@+id/item_price"
+        android:background="@drawable/table_row_bg5"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text=""
+        android:hint="@string/paid_amount"
+        android:singleLine="true"
+        android:layout_weight="50"
+        android:inputType="numberDecimal"/>
+</LinearLayout>

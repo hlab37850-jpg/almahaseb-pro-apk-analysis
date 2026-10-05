@@ -1,0 +1,792 @@
+<sql>
+	<statement>create table IF NOT EXISTS tmp_real (r real)</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS  `tran_type` (
+		`id` INTEGER PRIMARY KEY,
+		`name` TEXT unique,
+		param1 text,
+		param2 text
+		)
+	</statement>
+    <statement>
+        insert into  `tran_type` (id,name) values(0,'افتتاحي');
+    </statement>
+    <statement>
+		insert into  `tran_type` (id,name) values(1,'بيع');
+	</statement>
+	<statement>
+		insert into  `tran_type` (id,name) values(2,'شراء');
+	</statement>
+	<statement>
+		insert into  `tran_type` (id,name) values(3,'امر صرف');
+	</statement>
+	<statement>
+		insert into  `tran_type` (id,name) values(4,'تسوية مخزنية');
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS  `bill_type` (
+		`id` INTEGER PRIMARY KEY,
+		`name` TEXT unique,
+		param1 text,
+		param2 text
+		)
+	</statement>
+	<statement>
+		insert into  `bill_type` (id,name) values(0,'حركة');
+	</statement>
+	<statement>
+		insert into  `bill_type` (id,name) values(1,'نقد');
+	</statement>
+	<statement>
+		insert into  `bill_type` (id,name) values(2,'آجل');
+	</statement>
+
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS  `cus_type` (
+		`id` INTEGER PRIMARY KEY,
+		`name` TEXT unique,
+		param1 text,
+		param2 text
+		)
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(0,'عملاء');
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(1,'موردون');
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(2,'مبيعات ومشتريات');
+	</statement>
+
+	<statement>
+		insert into  `cus_type` (id,name) values(4,'نقدية');
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(5,'مصروفات');
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(6,'إيرادات');
+	</statement>
+	<statement>
+		insert into  `cus_type` (id,name) values(7,'أخرى');
+	</statement>
+	<statement>
+
+		CREATE TABLE IF NOT EXISTS   branches
+		(
+		id     INTEGER PRIMARY KEY AUTOINCREMENT,
+		name   text UNIQUE,
+		date_              text default (strftime('%Y-%m-%d','now')),
+		IS_ACTIVE            integer default 1,
+		ADDRESS              text,
+		gsm                text,
+		remarks text,
+		`param1`	TEXT,
+		`param2`	TEXT
+		);
+	</statement>
+	<statement>
+		insert into branches (id,name) values(0,'المخزن الرئيسي');
+	</statement>
+
+
+	<statement>
+		CREATE TABLE "customers" (
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`name`	TEXT UNIQUE,
+		`gsm`	TEXT default '' ,
+		g_id INTEGER default 0,
+		cus_type_id integer default 0 references cus_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		date_ default (strftime('%Y-%m-%d','now')),
+		ADDRESS              text,
+		remarks text,
+		`param1`	TEXT,
+		`param2`	TEXT,
+		`f1`	TEXT,
+		`f2`	TEXT,
+		`f3`	TEXT
+
+		)
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-1,2,'مبيعات آجل');
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-2,2,'مشتريات آجل');
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-3,4,'الصندوق');
+	</statement>
+
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-5,2,'مبيعات نقدي');
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-6,2,'مشتريات نقدي');
+	</statement>
+
+
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-7,6,'الخصم المكتسب');
+	</statement>
+
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-8,5,'الخصم المسموح به');
+	</statement>
+
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-9,2,'مردودات مبيعات آجل');
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-10,2,'مردودات  مشتريات آجل');
+	</statement>
+
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-11,2,'مردودات  مبيعات نقدي');
+	</statement>
+	<statement>
+		insert into customers (id,cus_type_id,name) values(-11,2,'مردودات  مشتريات نقدي');
+	</statement>
+
+
+
+
+	<statement>
+		CREATE TABLE "transactions" (
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`cus_id`	INTEGER,
+		`in`	TEXT,
+		`out`	TEXT,
+		`date_`	TEXT,
+		`remarks`	TEXT,
+		now_ TEXT,
+		`param1`	TEXT,
+		`param2`	TEXT,
+		t_cus_id INTEGER ,
+		`f1`	TEXT,
+		`f2`	TEXT,
+		`f3`	TEXT,
+		curr_id integer default 0 references currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		bill_id integer default 0,
+		p_id integer default 0,
+		p_remarks text,
+		p_amount real default 0,
+		p_status integer default 0,
+		p_ref_no text,
+		d_amount real default 0,
+		d_remarks text,
+		curr_price real default 0,
+		p_curr_id integer default 0,
+		p_date text
+
+		)
+	</statement>
+
+	<statement>
+		CREATE INDEX transactions_cus_id on transactions(cus_id);
+	</statement>
+	<statement>
+		CREATE INDEX transactions_t_cus_id on transactions(t_cus_id);
+	</statement>
+	<statement>
+		CREATE INDEX transactions_curr_id on transactions(curr_id);
+	</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS "valid" (
+
+		`imei`	TEXT,
+		`imei_code`	TEXT
+
+		)
+	</statement>
+	<statement>
+		CREATE TABLE "groups" (
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`name`	TEXT UNIQUE,
+		`param1`	TEXT,
+		`param2`	TEXT
+		)
+	</statement>
+	<statement>
+		insert into groups(id,name) values(0,'عام');
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS "currency" (
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`name`	TEXT UNIQUE,
+		curr_type integer default 1,
+		`param1`	TEXT,
+		`param2`	TEXT
+		);
+	</statement>
+
+	<statement>
+		insert into currency (id,name) values(0,'محلي');
+	</statement>
+	<statement>
+		insert into currency (id,name) values(1,'دولار');
+	</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS "item_type" (
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`name`	TEXT UNIQUE,
+		remarks text,
+		`param1`	TEXT,
+		`param2`	TEXT
+		);
+	</statement>
+	<statement>
+		insert into item_type (id,name) values(0,'عام');
+	</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS items
+		(
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`name`	TEXT UNIQUE,
+		item_type_id integer default 0  REFERENCES item_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT ,
+		date_                    text default (strftime('%Y-%m-%d','now')),
+		IS_ACTIVE                  integer default 1  ,
+		o_qty real default 0,
+		o_cost real default 0,
+		o_br_id integer default 0,
+		o_date text default (strftime('%Y-%m-%d','now')),
+        e_date text,
+		pic text,
+		remarks text,
+		qty real default 0,
+		price real default 0,
+		curr_id integer default 0,
+		curr_price real default 0,
+		`param1`	TEXT,
+		`param2`	TEXT
+		)
+		;
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS  `items_temp` (
+		item_id integer references items(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		item_type_id integer references item_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		curr_id integer ,
+		qty real default 0,
+		price real default 0,
+		no_ INTEGER PRIMARY KEY,
+		remark text
+
+		)
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS item_price
+		(
+
+		item_id integer REFERENCES items(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		curr_id integer REFERENCES currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		SLS_U_PRICE real,
+		date_                    text default (strftime('%Y-%m-%d','now')) ,
+		remarks text,
+		`param1`	TEXT,
+		`param2`	TEXT,
+		unique(item_id,curr_id)
+		)
+		;
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS item_price_history
+		(
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		item_id integer REFERENCES items(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		curr_id integer REFERENCES currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		sls_u_price real,
+		date_                    text ,
+		log_date text default (strftime('%Y-%m-%d','now')),
+		remarks text,
+		`param1`	TEXT,
+		`param2`	TEXT
+		)
+		;
+	</statement>
+	<statement>
+		CREATE TRIGGER item_price_update after insert ON item_price
+		BEGIN
+		INSERT INTO item_price_history(item_id,curr_id,sls_u_price,date_,remarks,param1,param2)
+		VALUES(NEW.item_id,NEW.curr_id,NEW.sls_u_price,NEW.date_,NEW.remarks,NEW.param1,NEW.param2);
+
+		END;
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS bills
+		(
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		date_            text default (strftime('%Y-%m-%d','now')),
+		remarks         text,
+		bill_no text ,-- used for return bill
+		curr_id          integer default 0 references currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		bill_type integer default 0,
+		tr_type integer references tran_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		is_back            integer default 0,
+		br_id          integer default 0 references branches(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		cus_id integer  ,
+		tran_status integer,
+		to_br_id integer  references branches(id) ON UPDATE RESTRICT ON DELETE RESTRICT ,
+		amount real default 0,
+		d_amount real default 0,
+		tax_amount             real default 0,
+		param1 text,
+		param2 text,
+		param3 text,
+		curr_price real default 0,
+		bill_no2 integer default 0,
+		cash_id integer default -3
+
+		);
+	</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS bill_transactions
+		(
+		bill_id                  integer references bills(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		item_id                    integer references items(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		item_type_id                    integer references item_type(id) ,
+		curr_id                    integer references currency(id) ,
+		qty                          integer,
+		cost_price                    real default 0,
+		sls_u_price               	real default 0,
+		d_amount real default 0,
+		param1 text,
+		param2 text,
+		param3 text,
+		cash_id integer default -3,
+		remark         text
+
+		);
+	</statement>
+
+
+	<statement>
+		CREATE TRIGGER bills_delete after delete ON bills
+		BEGIN
+		delete from transactions where bill_id=OLD.id;
+		END
+	</statement>
+
+
+	<statement>
+		CREATE TRIGGER bills_purchase_insert after insert ON bills
+		when (NEW.tr_type=2 and NEW.bill_type=2)
+		BEGIN
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-2,NEW.cus_id,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_sales_insert after insert ON bills
+		when (NEW.tr_type=1 and NEW.bill_type=2)
+		BEGIN
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(NEW.cus_id,-1,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_sales_insert_cash after insert ON bills
+		when ( NEW.tr_type=1 and NEW.bill_type=1)
+		BEGIN
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-3,-5,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		(select name from customers where id=NEW.cus_id)||'#'||NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_purchase_insert_cash after insert ON bills
+		when ( NEW.tr_type=2 and NEW.bill_type=1)
+		BEGIN
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-6,-3,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		(select name from customers where id=NEW.cus_id)||'#'||NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_purchase_update_cash after update ON bills
+		when ( NEW.tr_type=2 and NEW.bill_type=1)
+		BEGIN
+		delete from transactions where bill_id=NEW.id;
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-6,-3,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		(select name from customers where id=NEW.cus_id)||'#'||NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_purchase_update_post after update ON bills
+		when ( NEW.tr_type=2 and NEW.bill_type=2)
+		BEGIN
+		delete from transactions where bill_id=NEW.id;
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-2,NEW.cus_id,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_sales_update_cash after update ON bills
+		when ( NEW.tr_type=1 and NEW.bill_type=1)
+		BEGIN
+		delete from transactions where bill_id=NEW.id;
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(-3,-5,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		(select name from customers where id=NEW.cus_id)||'#'||NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER bills_sales_update_post after update ON bills
+		when ( NEW.tr_type=1 and NEW.bill_type=2)
+		BEGIN
+		delete from transactions where bill_id=NEW.id;
+		insert into transactions(cus_id,t_cus_id,[in],[out],curr_id,date_,bill_id,remarks,param2)
+		values(NEW.cus_id,-1,
+		1,NEW.amount,NEW.curr_id,strftime('%d-%m-%Y',NEW.date_),NEW.id,
+		NEW.remarks
+		||'#'||(case when length(NEW.bill_no)=0 then NEW.id else NEW.bill_no end ),
+		strftime('%H:%M', datetime('now','localtime'))
+		);
+		END
+	</statement>
+
+	<statement>
+	CREATE VIEW profit_loss_vw as
+
+	select date(strftime('%Y-%m-%d',substr(a.date_,7,4)||'-' ||substr(a.date_,4,2)||'-'||substr(a.date_,1,2) )) date_
+	, (case when (a.t_cus_id=b.id) then 'دائن'
+	when  [in]=-1 then 'دائن'
+	else 'مدين' end ) type_,b.name,sum([out]) amount
+	from transactions a,customers b,cus_type c
+	where
+	 (a.cus_id=b.id or a.t_cus_id=b.id)
+	and c.id=b.cus_type_id
+	and c.id in (0,1)
+	group by date(strftime('%Y-%m-%d',substr(a.date_,7,4)||'-' ||substr(a.date_,4,2)||'-'||substr(a.date_,1,2) )),b.name,
+	(case when (a.t_cus_id=b.id) then 'دائن'
+	when  [in]=-1 then 'دائن'
+	else 'مدين' end )
+</statement>
+	<statement>
+		CREATE VIEW item_avg_cost as
+		select  date(a.date_) date_,c.name curr_name,d.name br_name,b.item_id,
+		sum(case when a.tr_type=2 or  (a.tr_type=3  and a.to_br_id=d.id) then b.qty
+		else 0 end) in_qty,
+		sum(case when a.tr_type=2 or  (a.tr_type=3  and a.to_br_id=d.id) then b.qty
+		when a.tr_type=1 or ( a.tr_type=3  and a.br_id=d.id ) then b.qty*-1 else 0 end) net_qty,
+		sum(case 		when a.tr_type=1 then b.qty else 0 end) s_qty,
+		sum(case when  a.tr_type=3  and a.br_id=d.id then b.qty
+		else 0 end) issue_qty,
+		ifnull( round(sum( case when a.tr_type=2  then b.qty*b.cost_price else 0 end  )
+		/sum( case when a.tr_type=2 then  b.qty else 0 end ) ,2),0)cost_avg,
+		sum(case 		when a.tr_type=1 then b.qty*b.sls_u_price else 0 end) s_amount,
+		sum(case 		when a.tr_type=2 then b.qty*b.cost_price else 0 end) p_amount,
+		sum( b.qty*b.d_amount ) d_amount
+		,0 type_
+		from bill_transactions b ,bills a,currency c,branches d
+		where a.id=b.bill_id  and a.curr_id=c.id and a.tr_type in (1,2,3)
+		and (a.br_id=d.id or a.to_br_id=d.id)
+		group by b.item_id,date(a.date_),c.name,d.name
+		union all
+		select a.o_date,b.name,c.name,a.id,a.o_qty,a.o_qty,0,0,a.o_cost,0,o_cost*o_qty,0
+		,1 type_
+		from items a,currency b,branches c
+		where a.curr_id=b.id and a.curr_id=c.id;
+	</statement>
+	<statement>
+		CREATE VIEW item_avg_cost2 as
+		select  date(a.date_) date_ ,c.name curr_name,b.item_id item_id,sum(b.qty) qty,b.cost_price,sum(b.qty*b.cost_price) tot_cost,
+		sum(b.qty*b.d_amount) tot_disc
+		from bill_transactions b ,bills a,currency c
+		where a.id=b.bill_id  and a.curr_id=c.id and a.tr_type =2
+		group by b.item_id,c.name,b.cost_price,date(a.date_)
+		union all
+		select a.o_date,b.name,a.id,a.o_qty,a.o_cost,o_qty*o_cost,0
+		from items a,currency b
+		where a.curr_id=b.id
+	</statement>
+	<statement>
+		CREATE view  item_avg_cost4 as
+		select  a.id,a.date_,d.name br_name,e.name cus_name,h.name item_name,sum(b.qty) qty,f.name,f.id tr_type
+		from bill_transactions b ,bills a,currency c,branches d  ,customers e,tran_type f,items h
+		where a.id=b.bill_id  and a.curr_id=c.id and a.tr_type in (1,2)
+		and (a.br_id=d.id or a.to_br_id=d.id)
+		and a.cus_id=e.id and a.tr_type=f.id and b.item_id=h.id
+		group by b.item_id,a.date_,a.id,c.name,d.name  ,e.id,e.name,f.id,f.name,h.id,h.name
+		union all
+		select  a.id,a.date_,(select d.name from branches d where d.id=a.br_id)  br_name,(select d.name from branches d where d.id=a.to_br_id) cus_name,h.name item_name,sum(b.qty) qty,f.name
+		,f.id
+		from bill_transactions b ,bills a,currency c  ,tran_type f,items h
+		where a.id=b.bill_id  and a.curr_id=c.id and a.tr_type=3
+		and a.tr_type=f.id and b.item_id=h.id
+		group by b.item_id,a.date_,a.id,c.name  ,f.id,f.name,h.id,h.name
+		union all
+		select  a.id,a.date_,(select d.name from branches d where d.id=a.to_br_id)  br_name,(select d.name from branches d where d.id=a.br_id) cus_name,h.name item_name,sum(b.qty) qty,f.name
+		,f.id*-1
+		from bill_transactions b ,bills a,currency c  ,tran_type f,items h
+		where a.id=b.bill_id  and a.curr_id=c.id and a.tr_type=3
+		and a.tr_type=f.id and b.item_id=h.id
+		group by b.item_id,a.date_,a.id,c.name  ,f.id,f.name,h.id,h.name
+		union all
+		select 0 ,a.o_date,c.name,' ' cus_name,a.name,a.o_qty,'إفتتاحي'              ,-1
+		from items a,currency b,branches c
+		where a.curr_id=b.id and a.curr_id=c.id;
+	</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS items_closing_balance
+		(
+		`id`	INTEGER ,
+		`name`	TEXT ,
+		item_type_id integer REFERENCES item_type(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		date_                    text default (strftime('%Y-%m-%d','now')),
+		IS_ACTIVE                  integer default 1  ,
+		o_qty real default 0,
+		o_cost real default 0,
+		o_br_id integer default 0,
+		o_date text default (strftime('%Y-%m-%d','now')),
+		remarks text,
+		qty real default 0,
+		price real default 0,
+		curr_id integer default 0,
+		`param1`	TEXT,
+		`param2`	TEXT
+		)
+		;
+	</statement>
+	<statement>
+		CREATE TABLE IF NOT EXISTS current_closing_balance
+		(
+		`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		date_                    text default (strftime('%Y-%m-%d','now')),
+		updated                  integer default 0
+		)
+		;
+	</statement>
+	<statement>
+		insert into current_closing_balance(id,date_,updated) values (0,(select date(strftime('%Y-%m-%d','now'),'-1 year')),1);
+	</statement>
+	<statement>
+		CREATE VIEW cus_tr_curr_view as
+		select a.id as a_id,a.*,b.id b_id,b.name b_name,c.id c_id,c.name c_name,ifnull(d.id,0) d_id,ifnull(d.name,(select name from currency where id=0)) d_name,b.g_id,e.id e_id,e.name e_name,b.gsm
+		FROM groups c inner join customers AS b on c.id=b.g_id  left join transactions AS a
+		on (  a.cus_id = b.id)
+		left join currency d on (a.curr_id=d.id)
+		inner join cus_type e on e.id=b.cus_type_id
+		--where  b.cus_type_id in (0,1,4)
+		union all
+		select a.id as a_id,a.*,b.id b_id,b.name b_name,c.id c_id,c.name c_name,ifnull(d.id,0) d_id,ifnull(d.name,(select name from currency where id=0)) d_name,b.g_id,e.id e_id,e.name e_name,b.gsm
+		FROM groups c inner join customers AS b on c.id=b.g_id  left join transactions AS a
+		on (  a.t_cus_id = b.id)
+		left join currency d on (a.curr_id=d.id)
+		inner join cus_type e on e.id=b.cus_type_id
+		where a.t_cus_id is not null
+		--and  b.cus_type_id in (0,1,4);
+	</statement>
+	<statement>
+		CREATE INDEX bill_trans_id on bill_transactions(bill_id);
+	</statement>
+	<statement>
+		CREATE INDEX bill_trans_item_id on bill_transactions(item_id);
+	</statement>
+	<statement>
+		CREATE INDEX bills_br_id on bills(br_id);
+	</statement>
+	<statement>
+		CREATE INDEX bills_curr_id on bills(curr_id);
+	</statement>
+	<statement>
+		CREATE INDEX bills_tr_type_id on bills(tr_type);
+	</statement>
+	<statement>
+		CREATE TABLE "act_req" (
+		`imei`	TEXT ,
+		aid text,
+		`name`	TEXT ,
+		`phone`	TEXT,
+		`country`	TEXT,
+		`email`	TEXT,
+		`status`	INTEGER,
+		`date_`	TEXT,
+		`reply`	TEXT,
+		`user_reply`	TEXT,
+		`reply_from`	TEXT
+		);
+	</statement>
+	<statement>
+		create table days_ (id integer primary key,name text);
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(0,'الأحد');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(1,'الإثنين');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(2,'الثلاثاء');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(3,'الأربعاء');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(4,'الخميس');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(5,'الجمعة');
+	</statement>
+	<statement>
+		insert into days_ (id,name) values(6,'السبت');
+	</statement>
+
+
+	<statement>
+		CREATE TRIGGER transactions_cr_insert after insert ON transactions
+		when (NEW.[in]='-1' and NEW.t_cus_id is null and NEW.bill_id=0  )
+		BEGIN
+		update transactions set [in]=1,t_cus_id=NEW.cus_id,cus_id=-4 where id=NEW.id;
+		END
+	</statement>
+
+	<statement>
+		CREATE TRIGGER transactions_db_insert after insert ON transactions
+		when (NEW.[in]='1' and NEW.t_cus_id is null and NEW.bill_id=0 )
+		BEGIN
+		update transactions set t_cus_id=-3 where id=NEW.id;
+		END
+	</statement>
+	<statement>
+		CREATE TABLE "tr_p_temps" (
+		`no_`	INTEGER PRIMARY KEY AUTOINCREMENT,
+		`cus_id`	INTEGER,
+		`in_`	TEXT,
+		`out`	TEXT,
+		`date_`	TEXT,
+		`remarks`	TEXT,
+		now_ TEXT,
+		`param1`	TEXT,
+		`param2`	TEXT,
+		t_cus_id INTEGER ,
+		`f1`	TEXT,
+		`f2`	TEXT,
+		`f3`	TEXT,
+		curr_id integer default 0 references currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		p_curr_id integer default 0 references currency(id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+		bill_id integer default 0,
+		p_id integer default 0,
+		p_remarks text,
+		p_amount real default 0,
+		p_status integer default 0,
+		p_ref_no text,
+		curr_price real default 0,
+		p_date text
+
+		)
+	</statement>
+
+	--Adj type
+	<statement>
+		create table adj_type (id integer primary key,name text,acc_id integer,in_ integer);
+	</statement>
+	<statement>
+		insert into adj_type (id,name,acc_id,in_) values(1,'عجز',-15,1);
+	</statement>
+	<statement>
+		insert into adj_type (id,name,acc_id,in_) values(2,'زيادة',-15,-1);
+	</statement>
+	<statement>
+		insert into adj_type (id,name,acc_id,in_) values(3,'تالف',-16,1);
+	</statement>
+	<statement>
+		insert into adj_type (id,name,acc_id,in_) values(4,'افتتاحي',-14,1);
+	</statement>
+
+
+	--Screen table
+	<statement>create table screens (id integer primary key,name text,p_id integer default 0);
+	</statement>
+	<statement>delete from screens;</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(1,'عمليات مخزنية',0);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(2,'قيود وحسابات',0);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(3,'أصناف',0);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(4,'العملات ',0);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(5,'التقارير',0);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(6,'تحويل مخزني',1);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(7,'تسوية مخزنية',1);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(8,'إضافة مخزن',1);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(9,'قيد يومي',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(10,'قيد إفتتاحي',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(11,'إضافة حساب',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(12,'حركة الصندوق',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(13,'دليل الحسابات',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(14,'إقفال سنوي',2);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(15,'الأصناف',3);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(16,'أسعار البيع',3);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(17,'المخزون',3);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(18,'أرباح الأصناف',3);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(19,'إضافة عملة',4);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(20,'سعر العملات',4);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(21,'حركة الأصناف',5);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(22,'المخزون',5);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(23,'ميزان المراجعة',5);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(24,'قائمة الدخل',5);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(25,'المركز المالي',5);</statement>
+	<statement>insert or ignore into screens(id,name,p_id) values(26,'تقارير أخرى',5);</statement>
+
+	<statement>
+		CREATE TABLE IF NOT EXISTS  notifications (
+		`id` INTEGER PRIMARY KEY,
+		`name` TEXT ,
+		date_              text default (strftime('%Y-%m-%d','now')),
+		status integer default 0,
+		param1 text,
+		param2 text
+		)
+	</statement>
+	<statement>
+		create table closing_year
+		(id integer primary key autoincrement,date_ text, cnt real default 0,
+		now_ text default (strftime('%Y-%m-%d','now')));
+	</statement>
+</sql>

@@ -1,0 +1,163 @@
+﻿ CREATE INDEX if not exists bill_trans_id_h
+  on bill_transactions_h(bill_id);
+  /*-- 2024-11 speed up */
+     CREATE INDEX if not exists bills_h_id
+    on bills_h(id);
+ /*-- v1.99 update bill_date in bills_transactions table*/
+  /*-- update uniqu bills*/
+  update bill_transactions_h set date_=(select bills_h.date_ from bills_h where bills_h.id=bill_transactions_h.bill_id)
+  where bill_id in
+  (select id
+  from bills_h
+  group by id
+  HAVING count(*)=1)
+  And date_ is null
+  ;
+  /*-- update bills base on rowid year*/
+  create table if not EXISTS tmp_tr_h
+     (bill_id INTEGER,diff INTEGER,f_id INTEGER,t_id INTEGER,cnt INTEGER,tot real,yr integer)
+     ;
+  Delete from tmp_tr_h;
+    WITH RECURSIVE
+          fibo (yr,cnt,f_rowid, t_rowid)
+          as
+          (
+         select substr(date_,1,4) yr,count(*) cnt ,min(rowid) f_rowid,max(rowid) t_rowid
+      from bill_transactions_h where date_ is not null
+      group by substr(date_,1,4)
+      Order by 2 desc
+          )
+          insert into tmp_tr_h(yr,cnt,f_id,t_id) select * from fibo;
+           update bill_transactions_h
+                     set date_=(select c.date_ from bills_h c,tmp_tr_h d where
+                     c.id=bill_transactions_h.bill_id
+          		   and substr(c.date_,1,4)=d.yr
+                     and bill_transactions_h.ROWID BETWEEN d.f_id and d.t_id
+                     )
+                     where date_ is NULL
+                     and EXISTS
+                     (select * from bills_h a,tmp_tr_h b
+                     where
+                      bill_transactions_h.bill_id=a.id
+                     and  substr(a.date_,1,4)=b.yr
+                     and bill_transactions_h.ROWID BETWEEN b.f_id and b.t_id
+                     );
+   /*-- update unique bills */
+                         update bill_transactions_h set date_=(select a.date_ from bills_h a where a.id=bill_transactions_h.bill_id
+                         and not EXISTS(select * from bill_transactions_h b where b.bill_id=a.id and b.date_=a.date_ )
+                         )
+                         where bill_id in
+                         (select id
+                         from bills_h c
+                         where not EXISTS(
+                         select * from bill_transactions_h d where c.id=d.bill_id and c.date_=d.date_
+                         )
+                         group by id
+                         HAVING count(*)=1)
+                         And date_ is null;
+  /*-- update bills base on rowid again1*/
+  Delete from tmp_tr_h;
+    WITH RECURSIVE
+          fibo (yr,cnt,f_rowid, t_rowid)
+          as
+          (
+         select substr(date_,1,4) yr,count(*) cnt ,min(rowid) f_rowid,max(rowid) t_rowid
+      from bill_transactions_h where date_ is not null
+      group by substr(date_,1,4)
+      Order by 2 desc
+          )
+          insert into tmp_tr_h(yr,cnt,f_id,t_id) select * from fibo;
+           update bill_transactions_h
+                     set date_=(select c.date_ from bills_h c,tmp_tr_h d where
+                     c.id=bill_transactions_h.bill_id
+          		   and substr(c.date_,1,4)=d.yr
+                     and bill_transactions_h.ROWID BETWEEN d.f_id and d.t_id
+                     )
+                     where date_ is NULL
+                     and EXISTS
+                     (select * from bills_h a,tmp_tr_h b
+                     where
+                      bill_transactions_h.bill_id=a.id
+                     and  substr(a.date_,1,4)=b.yr
+                     and bill_transactions_h.ROWID BETWEEN b.f_id and b.t_id
+                     );
+ /*-- update same amount bills*/
+
+    Delete from tmp_tr_h;
+   WITH RECURSIVE
+           fibo (bill_id,diff,f_id, t_id,cnt,tot)
+           as
+           (
+   		select  bill_id,
+   ROWID-ifnull((select  ROW_NUMBER() OVER (ORDER BY Previous.bill_id)  from bill_transactions_h Previous where
+   Previous.rowid <bill_transactions_h.ROWID and Previous.bill_id=bill_transactions_h.bill_id
+   order by Previous.rowid desc limit 1  ) ,0) diff
+    ,min(rowid) f_id,max(rowid) t_id
+    ,count(*) cnt
+   ,sum(qty_pr*(sls_u_price+cost_price-d_amount)) tot
+   from bill_transactions_h
+   group by bill_id,
+   ROWID-ifnull((select  ROW_NUMBER() OVER (ORDER BY Previous.bill_id)  from bill_transactions_h Previous
+   where
+   Previous.rowid <bill_transactions_h.ROWID and Previous.bill_id=bill_transactions_h.bill_id
+   order by Previous.rowid desc limit 1  ) ,0)
+   )
+   INSERT into tmp_tr_h(bill_id,diff,f_id, t_id,cnt,tot) select * from fibo;
+   update bill_transactions_h
+   set date_=(select c.date_ from bills_h c,tmp_tr_h d where c.id=d.bill_id and round(c.amount,2)=round(d.tot,2)
+   and d.bill_id=bill_transactions_h.bill_id
+   and bill_transactions_h.ROWID BETWEEN d.f_id and d.t_id
+   )
+   where date_ is NULL
+   and EXISTS
+   (select * from bills_h a,tmp_tr_h b
+   where a.id=b.bill_id
+   and bill_transactions_h.bill_id=b.bill_id
+   and round(a.amount,2)=round(b.tot,2)
+   and bill_transactions_h.ROWID BETWEEN b.f_id and b.t_id
+   and 1=(select count(*) from tmp_tr_h e where e.bill_id=bill_transactions_h.bill_id  and  a.id=e.bill_id
+      and round(a.amount,2)=round(e.tot,2)
+
+      )
+   );
+/*-- update unique bills again*/
+    update bill_transactions_h set date_=(select a.date_ from bills_h a where a.id=bill_transactions_h.bill_id
+    and not EXISTS(select * from bill_transactions_h b where b.bill_id=a.id and b.date_=a.date_ )
+    )
+    where bill_id in
+    (select id
+    from bills_h c
+    where not EXISTS(
+    select * from bill_transactions_h d where c.id=d.bill_id and c.date_=d.date_
+    )
+    group by id
+    HAVING count(*)=1)
+    And date_ is null;
+/*-- update bills base on rowid again2*/
+Delete from tmp_tr_h;
+  WITH RECURSIVE
+        fibo (yr,cnt,f_rowid, t_rowid)
+        as
+        (
+       select substr(date_,1,4) yr,count(*) cnt ,min(rowid) f_rowid,max(rowid) t_rowid
+    from bill_transactions_h where date_ is not null
+    group by substr(date_,1,4)
+    Order by 2 desc
+        )
+        insert into tmp_tr_h(yr,cnt,f_id,t_id) select * from fibo;
+         update bill_transactions_h
+                   set date_=(select c.date_ from bills_h c,tmp_tr_h d where
+                   c.id=bill_transactions_h.bill_id
+        		   and substr(c.date_,1,4)=d.yr
+                   and bill_transactions_h.ROWID BETWEEN d.f_id and d.t_id
+                   )
+                   where date_ is NULL
+                   and EXISTS
+                   (select * from bills_h a,tmp_tr_h b
+                   where
+                    bill_transactions_h.bill_id=a.id
+                   and  substr(a.date_,1,4)=b.yr
+                   and bill_transactions_h.ROWID BETWEEN b.f_id and b.t_id
+                   );
+  /*-- 2024-11 speed up */
+     drop INDEX if  exists bills_h_id;

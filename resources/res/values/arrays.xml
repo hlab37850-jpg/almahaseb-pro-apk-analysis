@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="CountryCodes">
+        <item>93,AF</item>
+        <item>355,AL</item>
+        <item>213,DZ</item>
+        <item>376,AD</item>
+        <item>244,AO</item>
+        <item>672,AQ</item>
+        <item>54,AR</item>
+        <item>374,AM</item>
+        <item>297,AW</item>
+        <item>61,AU</item>
+        <item>43,AT</item>
+        <item>994,AZ</item>
+        <item>973,BH</item>
+        <item>880,BD</item>
+        <item>375,BY</item>
+        <item>32,BE</item>
+        <item>501,BZ</item>
+        <item>229,BJ</item>
+        <item>975,BT</item>
+        <item>591,BO</item>
+        <item>387,BA</item>
+        <item>267,BW</item>
+        <item>55,BR</item>
+        <item>673,BN</item>
+        <item>359,BG</item>
+        <item>226,BF</item>
+        <item>95,MM</item>
+        <item>257,BI</item>
+        <item>855,KH</item>
+        <item>237,CM</item>
+        <item>1,CA</item>
+        <item>238,CV</item>
+        <item>236,CF</item>
+        <item>235,TD</item>
+        <item>56,CL</item>
+        <item>86,CN</item>
+        <item>61,CX</item>
+        <item>61,CC</item>
+        <item>57,CO</item>
+        <item>269,KM</item>
+        <item>242,CG</item>
+        <item>243,CD</item>
+        <item>682,CK</item>
+        <item>506,CR</item>
+        <item>385,HR</item>
+        <item>53,CU</item>
+        <item>357,CY</item>
+        <item>420,CZ</item>
+        <item>45,DK</item>
+        <item>253,DJ</item>
+        <item>670,TL</item>
+        <item>593,EC</item>
+        <item>20,EG</item>
+        <item>503,SV</item>
+        <item>240,GQ</item>
+        <item>291,ER</item>
+        <item>372,EE</item>
+        <item>251,ET</item>
+        <item>500,FK</item>
+        <item>298,FO</item>
+        <item>679,FJ</item>
+        <item>358,FI</item>
+        <item>33,FR</item>
+        <item>689,PF</item>
+        <item>241,GA</item>
+        <item>220,GM</item>
+        <item>995,GE</item>
+        <item>49,DE</item>
+        <item>233,GH</item>
+        <item>350,GI</item>
+        <item>30,GR</item>
+        <item>299,GL</item>
+        <item>502,GT</item>
+        <item>224,GN</item>
+        <item>245,GW</item>
+        <item>592,GY</item>
+        <item>509,HT</item>
+        <item>504,HN</item>
+        <item>852,HK</item>
+        <item>36,HU</item>
+        <item>91,IN</item>
+        <item>62,ID</item>
+        <item>98,IR</item>
+        <item>964,IQ</item>
+        <item>353,IE</item>
+        <item>44,IM</item>
+        <item>972,IL</item>
+        <item>39,IT</item>
+        <item>225,CI</item>
+        <item>81,JP</item>
+        <item>962,JO</item>
+        <item>7,KZ</item>
+        <item>254,KE</item>
+        <item>686,KI</item>
+        <item>965,KW</item>
+        <item>996,KG</item>
+        <item>856,LA</item>
+        <item>371,LV</item>
+        <item>961,LB</item>
+        <item>266,LS</item>
+        <item>231,LR</item>
+        <item>218,LY</item>
+        <item>423,LI</item>
+        <item>370,LT</item>
+        <item>352,LU</item>
+        <item>853,MO</item>
+        <item>389,MK</item>
+        <item>261,MG</item>
+        <item>265,MW</item>
+        <item>60,MY</item>
+        <item>960,MV</item>
+        <item>223,ML</item>
+        <item>356,MT</item>
+        <item>692,MH</item>
+        <item>222,MR</item>
+        <item>230,MU</item>
+        <item>262,YT</item>
+        <item>52,MX</item>
+        <item>691,FM</item>
+        <item>373,MD</item>
+        <item>377,MC</item>
+        <item>976,MN</item>
+        <item>382,ME</item>
+        <item>212,MA</item>
+        <item>258,MZ</item>
+        <item>264,NA</item>
+        <item>674,NR</item>
+        <item>977,NP</item>
+        <item>31,NL</item>
+        <item>599,AN</item>
+        <item>687,NC</item>
+        <item>64,NZ</item>
+        <item>505,NI</item>
+        <item>227,NE</item>
+        <item>234,NG</item>
+        <item>683,NU</item>
+        <item>850,KP</item>
+        <item>47,NO</item>
+        <item>968,OM</item>
+        <item>92,PK</item>
+        <item>680,PW</item>
+        <item>507,PA</item>
+        <item>675,PG</item>
+        <item>595,PY</item>
+        <item>51,PE</item>
+        <item>63,PH</item>
+        <item>870,PN</item>
+        <item>48,PL</item>
+        <item>351,PT</item>
+        <item>1,PR</item>
+        <item>974,QA</item>
+        <item>40,RO</item>
+        <item>7,RU</item>
+        <item>250,RW</item>
+        <item>590,BL</item>
+        <item>685,WS</item>
+        <item>378,SM</item>
+        <item>239,ST</item>
+        <item>966,SA</item>
+        <item>221,SN</item>
+        <item>381,RS</item>
+        <item>248,SC</item>
+        <item>232,SL</item>
+        <item>65,SG</item>
+        <item>421,SK</item>
+        <item>386,SI</item>
+        <item>677,SB</item>
+        <item>252,SO</item>
+        <item>27,ZA</item>
+        <item>82,KR</item>
+        <item>34,ES</item>
+        <item>94,LK</item>
+        <item>290,SH</item>
+        <item>508,PM</item>
+        <item>249,SD</item>
+        <item>597,SR</item>
+        <item>268,SZ</item>
+        <item>46,SE</item>
+        <item>41,CH</item>
+        <item>963,SY</item>
+        <item>886,TW</item>
+        <item>992,TJ</item>
+        <item>255,TZ</item>
+        <item>66,TH</item>
+        <item>228,TG</item>
+        <item>690,TK</item>
+        <item>676,TO</item>
+        <item>216,TN</item>
+        <item>90,TR</item>
+        <item>993,TM</item>
+        <item>688,TV</item>
+        <item>971,AE</item>
+        <item>256,UG</item>
+        <item>44,GB</item>
+        <item>380,UA</item>
+        <item>598,UY</item>
+        <item>1,US</item>
+        <item>998,UZ</item>
+        <item>678,VU</item>
+        <item>39,VA</item>
+        <item>58,VE</item>
+        <item>84,VN</item>
+        <item>681,WF</item>
+        <item>967,YE</item>
+        <item>260,ZM</item>
+        <item>263,ZW</item>
+    </array>
+    <array name="action_0">
+        <item>أنواع الأصناف</item>
+        <item>الأصناف</item>
+        <item>المخازن</item>
+        <item>الموردين</item>
+        <item>العملاء</item>
+        <item>العملات</item>
+    </array>
+    <array name="action_1">
+        <item>فاتورة بيع</item>
+        <item>فاتورة شراء</item>
+        <item>تحويل مخزني</item>
+    </array>
+    <array name="action_3">
+        <item>المخزون المتبقي</item>
+        <item>أرصدة الحسابات</item>
+        <item>أرباح الأصناف</item>
+        <item>العمليات اليومية</item>
+        <item>القيود اليومية</item>
+        <item>حركة الصندوق</item>
+        <item>حركة الحسابات</item>
+        <item>إجمالي التصنيفات</item>
+        <item>فوارق أسعار العملات</item>
+        <item>رأس المال العامل</item>
+        <item>الربح على مستوى العميل</item>
+        <item>المبيعات حسب الصنف</item>
+        <item>المشتريات حسب الصنف</item>
+        <item>تفاصيل حركة الأصناف</item>
+    </array>
+    <array name="action_3_end_date">
+        <item>المخزون المتبقي</item>
+        <item>أرصدة الحسابات</item>
+        <item>أرباح الأصناف</item>
+        <item>العمليات اليومية</item>
+        <item>القيود اليومية</item>
+        <item>حركة الصندوق</item>
+        <item>حركة الحسابات</item>
+        <item>إجمالي التصنيفات</item>
+        <item>فوارق أسعار العملات</item>
+        <item>رأس المال العامل</item>
+        <item>الربح على مستوى العميل</item>
+        <item>المبيعات حسب الصنف</item>
+        <item>المشتريات حسب الصنف</item>
+        <item>تفاصيل حركة الأصناف</item>
+        <item>الأصناف حسب الإنتهاء</item>
+    </array>
+    <array name="approval_plugin">
+        <item>واتساب</item>
+        <item>الشعار</item>
+        <item>الاسم</item>
+        <item>التلفون</item>
+        <item>الرصيد</item>
+        <item>التاريخ</item>
+        <item>التوقيع</item>
+        <item>سطرجديد</item>
+        <item>محاذاة</item>
+        <item>B</item>
+    </array>
+    <array name="auto_sms_plugin">
+        <item>إشعار مدين-دائن</item>
+        <item>الحساب</item>
+        <item>التاريخ</item>
+        <item>القيد</item>
+        <item>الرصيد</item>
+    </array>
+    <array name="barcode_type">
+        <item>الكاميرا</item>
+        <item>USB</item>
+    </array>
+    <array name="barcode_typeValues">
+        <item>1</item>
+        <item>2</item>
+    </array>
+    <array name="blankLines">
+        <item>سطر واحد</item>
+        <item>سطرين</item>
+        <item>3 أسطر</item>
+        <item>5 أسطر</item>
+        <item>7 أسطر</item>
+        <item>9 أسطر</item>
+    </array>
+    <array name="blankLinesValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+        <item>9</item>
+    </array>
+    <array name="costAvg">
+        <item>المتحرك</item>
+        <item>متوسط الأسعار</item>
+        <item>المرجح</item>
+    </array>
+    <array name="costAvgValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </array>
+    <array name="edit_image">
+        <item>فتح الصورة</item>
+        <item>حـذف الصورة</item>
+        <item>الكاميرا</item>
+        <item>الهاتف</item>
+    </array>
+    <array name="font_size">
+        <item>صغير</item>
+        <item>عادي</item>
+        <item>متوسط</item>
+        <item>كبير</item>
+    </array>
+    <array name="font_size_values">
+        <item>16</item>
+        <item>15</item>
+        <item>12</item>
+        <item>10</item>
+    </array>
+    <array name="hints">
+        <item>لإخفاء التعليمات...ادخل اعدادات ثم خيارات أخري</item>
+        <item>- لتعديل السعر اضغط على + أسفل الشاشة \n - لاستعراض الأسعار السابقة،انقر على الصنف</item>
+        <item>أيقونة حفظ الفاتورة ،أعلى الشاشة</item>
+        <item>للتعديل..إضغط مطولا على الشاشة</item>
+        <item>- يمكنك استعراض الصفحات بالمسح على الشاشة يمينا وشمالا</item>
+        <item>لاستعراض التفاصيل انقر على أي صنف</item>
+        <item>لاستعراض التفاصيل انقر على أي إسم</item>
+        <item>للبحث المتقدم حسب التاريخ انقر على خيارات</item>
+    </array>
+    <array name="icons">
+        <item>@drawable/backup</item>
+        <item>@drawable/restore</item>
+        <item>@drawable/drive</item>
+        <item>@drawable/account_tree</item>
+        <item>@drawable/setting</item>
+        <item>@drawable/support</item>
+        <item>@drawable/about</item>
+        <item>@drawable/exit</item>
+    </array>
+    <array name="icons2">
+        <item>@android:drawable/ic_menu_today</item>
+        <item>@android:drawable/ic_menu_today</item>
+        <item>@android:drawable/ic_menu_today</item>
+        <item>@android:drawable/ic_menu_today</item>
+        <item>@android:drawable/ic_menu_today</item>
+        <item>@android:drawable/ic_menu_today</item>
+    </array>
+    <array name="icons3">
+        <item>@drawable/sales2</item>
+        <item>@drawable/purchases2</item>
+        <item>@drawable/issues2</item>
+        <item>@drawable/items2</item>
+        <item>@drawable/item_price2</item>
+        <item>@drawable/amount2</item>
+    </array>
+    <array name="icons3_">
+        <item>@drawable/sales2</item>
+        <item>@drawable/purchases2</item>
+        <item>@drawable/issues2</item>
+    </array>
+    <array name="icons3_main">
+        <item>@drawable/issues2</item>
+        <item>@drawable/purchases2</item>
+        <item>@drawable/sales2</item>
+        <item>@drawable/items2</item>
+        <item>@drawable/item_price2</item>
+        <item>@drawable/amount2</item>
+        <item>@drawable/items2</item>
+        <item>@drawable/amount2</item>
+        <item>@drawable/items2</item>
+    </array>
+    <array name="icons4">
+        <item>@drawable/amount_</item>
+        <item>@drawable/sales</item>
+        <item>@drawable/accounts</item>
+        <item>@drawable/purchase</item>
+    </array>
+    <array name="icons4_">
+        <item>@drawable/purchase</item>
+        <item>@drawable/sales</item>
+        <item>@drawable/issues</item>
+        <item>@drawable/stock</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+    </array>
+    <array name="icons5">
+        <item>@drawable/whatsapp2</item>
+        <item>@drawable/sms</item>
+        <item>@drawable/price_list</item>
+    </array>
+    <array name="icons6">
+        <item>@drawable/phone</item>
+        <item>@drawable/phone</item>
+        <item>@drawable/phone</item>
+    </array>
+    <array name="icons6_">
+        <item>@drawable/whatsapp2</item>
+        <item>@drawable/whatsapp2</item>
+        <item>@drawable/whatsapp2</item>
+    </array>
+    <array name="icons7">
+        <item>@drawable/sales3</item>
+        <item>@drawable/purchases3</item>
+        <item>@drawable/issues3</item>
+        <item>@drawable/items</item>
+        <item>@drawable/item_price</item>
+        <item>@drawable/amount</item>
+    </array>
+    <array name="icons7_">
+        <item>@drawable/sales3</item>
+        <item>@drawable/purchases3</item>
+        <item>@drawable/issues3</item>
+    </array>
+    <array name="icons8_">
+        <item>@drawable/issues3</item>
+        <item>@drawable/issues3</item>
+    </array>
+    <array name="icons9">
+        <item>@drawable/amount</item>
+        <item>@drawable/issues3</item>
+        <item>@drawable/whatsapp</item>
+        <item>@drawable/whatsapp</item>
+    </array>
+    <array name="icons_0">
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+    </array>
+    <array name="icons_1">
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+        <item>@drawable/add</item>
+    </array>
+    <array name="icons_3">
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+    </array>
+    <array name="icons_3_end_date_">
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+        <item>@drawable/reports</item>
+    </array>
+    <array name="icons_share">
+        <item>@drawable/pdf</item>
+        <item>@drawable/camera</item>
+        <item>@drawable/sms</item>
+        <item>@drawable/excel</item>
+    </array>
+    <array name="icons_share_bill">
+        <item>@drawable/pdf</item>
+        <item>@drawable/sms</item>
+        <item>@drawable/whatsapp2</item>
+    </array>
+    <array name="icons_share_bill2">
+        <item>@drawable/pdf</item>
+        <item>@drawable/excel</item>
+        <item>@drawable/sms</item>
+        <item>@drawable/whatsapp2</item>
+    </array>
+    <array name="icons_share_bill3">
+        <item>@drawable/pdf</item>
+        <item>@drawable/excel</item>
+    </array>
+    <array name="icons_share_tr">
+        <item>@drawable/whatsapp2</item>
+        <item>@drawable/sms</item>
+        <item>@android:drawable/ic_menu_share</item>
+    </array>
+    <array name="icons_user">
+        <item>@drawable/backup</item>
+        <item>@drawable/restore</item>
+        <item>@drawable/support</item>
+        <item>@drawable/about</item>
+        <item>@drawable/exit</item>
+    </array>
+    <array name="line_shape_size">
+        <item>نقاط</item>
+        <item>سطر</item>
+        <item>سطر مقطع</item>
+    </array>
+    <array name="line_shape_values">
+        <item>.</item>
+        <item>_</item>
+        <item>-</item>
+    </array>
+    <array name="notify_bill_type">
+        <item>عادية</item>
+        <item>حرارية</item>
+    </array>
+    <array name="notify_bill_typeValues">
+        <item>1</item>
+        <item>2</item>
+    </array>
+    <array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </array>
+    <array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </array>
+    <array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </array>
+    <array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </array>
+    <array name="select_image">
+        <item>الكاميرا</item>
+        <item>الهاتف</item>
+    </array>
+    <array name="thermal_no_printed">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </array>
+    <array name="thermal_no_printed_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </array>
+    <array name="thermal_size">
+        <item>110mm</item>
+        <item>80mm</item>
+        <item>58mm</item>
+        <item>50mm</item>
+        <item>48mm</item>
+    </array>
+    <array name="thermal_size_values">
+        <item>110</item>
+        <item>80</item>
+        <item>58</item>
+        <item>50</item>
+        <item>48</item>
+    </array>
+    <array name="thermal_type">
+        <item>عام</item>
+        <item>Zebra</item>
+        <item>ESC/POS</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>LABEL</item>
+    </array>
+    <array name="thermal_type_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>10</item>
+    </array>
+    <array name="titles">
+        <item>حفـظ نسخة إحتياطية</item>
+        <item>إسترجاع قاعدة البيانات</item>
+        <item>جوجل درايف</item>
+        <item>دليل الحسابات</item>
+        <item>إعـدادات</item>
+        <item>للتــواصـل والـدعـم</item>
+        <item>حــول البـرنـامج</item>
+        <item>خروج</item>
+    </array>
+    <array name="titles2">
+        <item>تقـرير-مخزون الأصناف</item>
+        <item>تقـرير-حسابات الموردين</item>
+        <item>تقـرير-إجمالي المشتريات</item>
+        <item>تقـرير-إجمالي المبيعات</item>
+        <item>تقـرير-الصندوق</item>
+        <item>تقـرير-النفقات والإيرادات</item>
+    </array>
+    <array name="titles3">
+        <item>بيع</item>
+        <item>شراء</item>
+        <item>تحويل مخزني</item>
+        <item>أصنـاف</item>
+        <item>الأسعار</item>
+        <item>سداد</item>
+    </array>
+    <array name="titles3_">
+        <item>بيع</item>
+        <item>شراء</item>
+        <item>تحويل مخزني</item>
+    </array>
+    <array name="titles3_main">
+        <item>تحويل مخزني</item>
+        <item>شراء</item>
+        <item>بيع</item>
+        <item>أصنـاف</item>
+        <item>الأسعار</item>
+        <item>سداد</item>
+        <item>مخازن</item>
+        <item>إفتتاحي</item>
+        <item>حسابات</item>
+    </array>
+    <array name="titles4">
+        <item>قبض/صرف</item>
+        <item>المبيعات</item>
+        <item>الحسابات</item>
+        <item>المشتريات</item>
+    </array>
+    <array name="titles4_">
+        <item>المشتريات</item>
+        <item>المبيعات</item>
+        <item>عملية مخزن</item>
+        <item>المخزون</item>
+        <item>أرباح الأصناف</item>
+        <item>حركة الصنف</item>
+    </array>
+    <array name="titles5">
+        <item>واتس</item>
+        <item>رسالة نصية</item>
+        <item>تسجيل طلب</item>
+    </array>
+    <array name="titles6">
+        <item>+967777269411</item>
+        <item>+967770203819</item>
+        <item>+201118847953</item>
+    </array>
+    <array name="titles6_">
+        <item>+967777269411</item>
+        <item>+967770203819</item>
+        <item>+201118847953</item>
+    </array>
+    <array name="titles7">
+        <item>بيع</item>
+        <item>شراء</item>
+        <item>تحويل مخزني</item>
+        <item>أصنـاف</item>
+        <item>الأسعار</item>
+        <item>سداد</item>
+    </array>
+    <array name="titles7_">
+        <item>بيع</item>
+        <item>شراء</item>
+        <item>تحويل مخزني</item>
+    </array>
+    <array name="titles8_">
+        <item>تحويل مخزني</item>
+        <item>تسوية مخزنية</item>
+    </array>
+    <array name="titles9">
+        <item>سداد مبلغ</item>
+        <item>إرسال رسالة نصية</item>
+        <item>إرسال رسالة واتساب</item>
+        <item>مصادقة على الحساب واتساب</item>
+    </array>
+    <array name="titles_bills">
+        <item>بيع</item>
+        <item>شراء</item>
+        <item>تحويل مخزني</item>
+        <item>تسوية مخزنية</item>
+        <item>جرد مخزني</item>
+        <item>عرض سعر</item>
+        <item>طلب شراء</item>
+        <item>توريد مخزني</item>
+        <item>صرف مخزني</item>
+    </array>
+    <array name="titles_main">
+        <item>قائمة المبيعات</item>
+        <item>قائمة المشتريات</item>
+        <item>تحويل مخزني</item>
+        <item>تسويات مخزنية</item>
+        <item>جرد مخزني</item>
+        <item>عرض سعر</item>
+        <item>طلب شراء</item>
+        <item>توريد مخزني</item>
+        <item>صرف مخزني</item>
+    </array>
+    <array name="titles_share">
+        <item>PDF</item>
+        <item>صـورة</item>
+        <item>رسالة نصية</item>
+        <item>إكسـل</item>
+    </array>
+    <array name="titles_share_bill">
+        <item>PDF</item>
+        <item>رسالة نصية</item>
+        <item>واتساب</item>
+    </array>
+    <array name="titles_share_bill2">
+        <item>PDF</item>
+        <item>إكسل</item>
+        <item>رسالة نصية</item>
+        <item>واتساب</item>
+    </array>
+    <array name="titles_share_bill3">
+        <item>PDF</item>
+        <item>إكسل</item>
+    </array>
+    <array name="titles_share_tr">
+        <item>واتس</item>
+        <item>رسالة نصية</item>
+        <item>مشاركة</item>
+    </array>
+    <array name="titles_user">
+        <item>حفـظ نسخة إحتياطية</item>
+        <item>إسترجاع قاعدة البيانات</item>
+        <item>للتــواصـل والـدعـم</item>
+        <item>حــول البـرنـامج</item>
+        <item>خروج</item>
+    </array>
+</resources>

@@ -1,0 +1,21 @@
+﻿/*--2024-04 --*/
+/*-- 2024-04 archive: bills2(7) without delete and No duplicated --*/
+      create table if not exists bills2_h as select * from bills2 where 1=2;
+      create table if not exists bill_transactions2_h as select * from bill_transactions2 where 1=2;
+          insert into bill_transactions2_h select b.* from bills2 a,bill_transactions2 b
+             where  a.id=b.bill_id
+           and a.tr_type=7
+            and date(a.date_)<=(select date(max(date_),'localtime','-1 day') from closing_year)
+             and not exists(select 1 from bills2_h c where c.id=a.id and c.date_=a.date_);
+      insert into bills2_h select * from bills2 a where a.tr_type=7
+      and date(a.date_)<=(select date(max(date_),'localtime','-1 day') from closing_year)
+       and not exists(select 1 from bills2_h c where c.id=a.id and c.date_=a.date_);
+
+  update bill_transactions2_h
+         set date_=(select d.date_ from bills2 d where d.id=bill_transactions2_h.bill_id)
+            where date_ is null and rowid>(select max(c.rowid)-(select count(*) from bills2 a,bill_transactions2 b
+                    where  a.id=b.bill_id
+                    and date(a.date_)<=(select date(max(date_),'localtime','-1 day') from closing_year))
+                     from bill_transactions2_h c);
+
+

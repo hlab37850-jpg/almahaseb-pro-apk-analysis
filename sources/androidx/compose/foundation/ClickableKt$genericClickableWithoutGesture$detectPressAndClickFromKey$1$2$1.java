@@ -1,0 +1,59 @@
+package androidx.compose.foundation;
+
+import androidx.compose.foundation.interaction.MutableInteractionSource;
+import androidx.compose.foundation.interaction.PressInteraction;
+import defpackage.AbstractC0378Bt;
+import defpackage.FW;
+import defpackage.InterfaceC0526Fp;
+import defpackage.InterfaceC0793Of;
+import defpackage.InterfaceC2052dg;
+import defpackage.InterfaceC3252ki;
+import defpackage.LL;
+import defpackage.XS;
+
+/* JADX INFO: loaded from: classes.dex */
+@InterfaceC3252ki(c = "androidx.compose.foundation.ClickableKt$genericClickableWithoutGesture$detectPressAndClickFromKey$1$2$1", f = "Clickable.kt", l = {385}, m = "invokeSuspend")
+public final class ClickableKt$genericClickableWithoutGesture$detectPressAndClickFromKey$1$2$1 extends XS implements InterfaceC0526Fp {
+    final /* synthetic */ MutableInteractionSource $interactionSource;
+    final /* synthetic */ PressInteraction.Press $it;
+    int label;
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public ClickableKt$genericClickableWithoutGesture$detectPressAndClickFromKey$1$2$1(MutableInteractionSource mutableInteractionSource, PressInteraction.Press press, InterfaceC0793Of interfaceC0793Of) {
+        super(2, interfaceC0793Of);
+        this.$interactionSource = mutableInteractionSource;
+        this.$it = press;
+    }
+
+    @Override // defpackage.AbstractC2171f7
+    public final InterfaceC0793Of create(Object obj, InterfaceC0793Of interfaceC0793Of) {
+        return new ClickableKt$genericClickableWithoutGesture$detectPressAndClickFromKey$1$2$1(this.$interactionSource, this.$it, interfaceC0793Of);
+    }
+
+    @Override // defpackage.InterfaceC0526Fp
+    /* JADX INFO: renamed from: invoke, reason: merged with bridge method [inline-methods] */
+    public final Object mo13invoke(InterfaceC2052dg interfaceC2052dg, InterfaceC0793Of interfaceC0793Of) {
+        return ((ClickableKt$genericClickableWithoutGesture$detectPressAndClickFromKey$1$2$1) create(interfaceC2052dg, interfaceC0793Of)).invokeSuspend(FW.a);
+    }
+
+    @Override // defpackage.AbstractC2171f7
+    public final Object invokeSuspend(Object obj) throws Throwable {
+        Object objD = AbstractC0378Bt.d();
+        int i = this.label;
+        if (i == 0) {
+            LL.b(obj);
+            MutableInteractionSource mutableInteractionSource = this.$interactionSource;
+            PressInteraction.Release release = new PressInteraction.Release(this.$it);
+            this.label = 1;
+            if (mutableInteractionSource.emit(release, this) == objD) {
+                return objD;
+            }
+        } else {
+            if (i != 1) {
+                throw new IllegalStateException("call to 'resume' before 'invoke' with coroutine");
+            }
+            LL.b(obj);
+        }
+        return FW.a;
+    }
+}

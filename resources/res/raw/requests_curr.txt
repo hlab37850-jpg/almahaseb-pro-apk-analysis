@@ -1,0 +1,62 @@
+﻿/* --bills with tr_type=1 */
+/*-- check cus names and currency */
+/*--update trim--*/
+/*-- update requests_items--*/
+ /*--set item_name=trim(item_name),unit_name=trim(unit_name)--*/
+ /*--where status=-1 --*/
+
+ /*--update online_ref of old data--*/
+  update currency
+  set online_ref=(select a.online_ref from requests_curr a where status=-1 and a.curr_name=currency.name)
+  where online_ref=0
+  and exists(select * from requests_curr a where status=-1 and a.curr_name=currency.name);
+
+   /*--update edited currency info--*/
+    update currency
+    set name=(select a.curr_name from requests_curr a where status=-1 and a.online_ref=currency.online_ref)
+     where  EXISTS(select * from requests_curr a where status=-1 and a.online_ref=currency.online_ref)
+     and not EXISTS(select * from requests_curr a where status=-1
+     and a.curr_name  in(select c.name from currency c) );
+
+      update currency
+         set
+         code_name=(select a.code_name from requests_curr a where status=-1 and a.online_ref=currency.online_ref)
+         ,fils_name=(select a.fils_name from requests_curr a where status=-1 and a.online_ref=currency.online_ref)
+          where  EXISTS(select * from requests_curr a where status=-1 and a.online_ref=currency.online_ref)
+         ;
+
+ /*--insert new currency--*/
+  INSERT into currency(name,code_name,fils_name,online_ref)
+  select DISTINCT curr_name ,code_name,fils_name,online_ref from requests_curr a
+  where a.status=-1
+  and not EXISTS(select * from currency where name=(a.curr_name))
+   and not EXISTS(select * from currency where online_ref=(a.online_ref));
+
+
+
+ update requests_curr
+ set curr_id=(select id from currency where name=(curr_name))
+ where status=-1  ;
+
+
+
+ /*--curr_price*/
+  update requests_curr_price
+ set curr_id=(select id from currency where name=(curr_name))
+ ,t_date=(case when t_date='' then null else t_date end)
+  where EXISTS(select * from requests_curr where status=-1  and req_id=requests_curr_price.req_id) ;
+delete from currency_price where exists(
+select a.curr_id from requests_curr_price a,requests_curr b
+          where b.status=-1 and a.req_id=b.req_id and a.curr_id=b.curr_id and a.curr_id=currency_price.curr_id);
+/*--Insert curr price--*/
+insert into currency_price(curr_id,price,f_date,t_date)
+ select distinct a.curr_id,a.price,a.f_date,a.t_date
+ from requests_curr_price a,requests_curr b
+ where b.status=-1 and a.req_id=b.req_id and a.curr_id=b.curr_id and b.curr_id!=0
+ and not exists(select * from currency_price c where c.curr_id=a.curr_id
+ and c.f_date=a.f_date and c.t_date=a.t_date and c.price=a.price);
+
+ /*--UPDATE STATUS--*/
+ update requests_curr set status=0 where status=-1 and
+  exists(select * from currency b where b.id=requests_curr.curr_id )
+  ;

@@ -1,0 +1,50 @@
+﻿/* --bills with tr_type=1 */
+/*-- check cus names and currency */
+/*--update trim--*/
+/* -- update requests_names --*/
+/* -- set cus_name=trim(cus_name),g_name=trim(g_name) --*/
+/* -- where status=-1 --*/
+
+ /*--insert base groups--*/
+  INSERT into groups(name)
+  select DISTINCT g_name  from requests_names a
+  where a.status=-1
+  and not EXISTS(select * from groups where name=(a.g_name))  ;
+
+ /*--update online_ref of old data--*/
+  update customers
+  set online_ref=(select a.online_ref from requests_names a where status=-1 and a.cus_name=customers.name)
+  where online_ref=0
+  and exists(select * from requests_names a where status=-1 and a.cus_name=customers.name);
+  /*--update edited customers info--*/
+   update customers
+   set name=(select a.cus_name from requests_names a where status=-1 and a.online_ref=customers.online_ref)
+    where  EXISTS(select * from requests_names a where status=-1 and a.online_ref=customers.online_ref)
+      and not EXISTS(select * from requests_names a where status=-1
+         and a.cus_name  in(select c.name from customers c) );
+  update customers
+     set gsm=(select a.gsm from requests_names a where status=-1 and a.online_ref=customers.online_ref)
+     ,address=(select a.address from requests_names a where status=-1 and a.online_ref=customers.online_ref)
+      where  EXISTS(select * from requests_names a where status=-1 and a.online_ref=customers.online_ref)
+       ;
+/*--new customer--*/
+   INSERT into customers(name,acc_p_id,gsm,address,online_ref)
+   select DISTINCT (cus_name)  name,acc_p_id,gsm,address,online_ref  from requests_names a
+   where status=-1
+   and not EXISTS(select * from customers where name=(a.cus_name) )
+    and not EXISTS(select * from customers where online_ref=(a.online_ref));
+
+
+ update requests_names
+ set cus_id=(select id from customers where name=(cus_name))
+ ,g_id=(select id from groups where name=(g_name))
+ where status=-1  ;
+
+
+
+
+
+ /*--UPDATE STATUS--*/
+ update requests_names set status=0 where status=-1 and
+  exists(select * from customers b where b.id=requests_names.cus_id )
+  ;

@@ -1,0 +1,44 @@
+package org.apache.poi.hssf.record.aggregates;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.poi.hssf.model.RecordStream;
+import org.apache.poi.hssf.record.DVALRecord;
+import org.apache.poi.hssf.record.DVRecord;
+import org.apache.poi.hssf.record.Record;
+
+/* JADX INFO: loaded from: classes4.dex */
+public final class DataValidityTable extends RecordAggregate {
+    private final DVALRecord _headerRec;
+    private final List _validationList;
+
+    public DataValidityTable(RecordStream recordStream) {
+        this._headerRec = (DVALRecord) recordStream.getNext();
+        ArrayList arrayList = new ArrayList();
+        while (recordStream.peekNextClass() == DVRecord.class) {
+            arrayList.add(recordStream.getNext());
+        }
+        this._validationList = arrayList;
+    }
+
+    public void addDataValidation(DVRecord dVRecord) {
+        this._validationList.add(dVRecord);
+        this._headerRec.setDVRecNo(this._validationList.size());
+    }
+
+    @Override // org.apache.poi.hssf.record.aggregates.RecordAggregate
+    public void visitContainedRecords(RecordAggregate.RecordVisitor recordVisitor) {
+        if (this._validationList.isEmpty()) {
+            return;
+        }
+        recordVisitor.visitRecord(this._headerRec);
+        for (int i = 0; i < this._validationList.size(); i++) {
+            recordVisitor.visitRecord((Record) this._validationList.get(i));
+        }
+    }
+
+    public DataValidityTable() {
+        this._headerRec = new DVALRecord();
+        this._validationList = new ArrayList();
+    }
+}

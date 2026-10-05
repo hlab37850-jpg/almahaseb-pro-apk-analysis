@@ -1,0 +1,825 @@
+<sql>
+
+	--## v1.136 sync
+	<statement>
+		CREATE TABLE IF NOT EXISTS table_action
+		(
+		id	INTEGER PRIMARY KEY AUTOINCREMENT,
+		table_name text NOT NULL,
+		table_cond text NOT NULL,
+		date_            text default (strftime('%Y-%m-%d','now')),
+		ref_no text NOT NULL,
+		action_ text NOT NULL,
+		batch_ integer default 0,
+		dev_id text,
+		status integer default 0,
+		param1 text,param2 text
+		,init integer default 0
+
+		);
+	</statement>
+	--2024-11 allow bill_no dup from diff devices
+	<statement>
+		drop INDEX if EXISTS uq_bills_no2 ;
+	</statement>
+    --2025-12 allow bill_no dup from diff devices
+    <statement>
+        drop INDEX if EXISTS uq_bills_no3 ;
+    </statement>
+	<statement>CREATE UNIQUE  INDEX  if not EXISTS uq_bills_no4 ON bills
+        (tr_type,is_back,br_id,bill_no2,adj_id,
+        CASE
+        WHEN instr(online_ref2, ':') > 0
+        THEN substr(online_ref2, instr(online_ref2, ':') + 1,14)
+        ELSE online_ref2
+        END
+        );</statement>
+-- if first closing
+	<statement>CREATE UNIQUE INDEX if not exists transactions_ref2_uq ON transactions(online_ref2);</statement>
+	<statement>CREATE UNIQUE INDEX if not exists transactions_h_ref2_uq ON transactions_h(online_ref2,date_);</statement>
+	<statement>CREATE UNIQUE INDEX if not exists bills_h_ref2_uq ON bills_h(online_ref2,date_);</statement>
+	<statement>CREATE UNIQUE INDEX if not exists bills2_h_ref2_uq ON bills2_h(online_ref2);</statement>
+	<statement>CREATE UNIQUE INDEX if not exists items_h_ref2_uq2 ON items_h(online_ref2,name,date_);</statement>
+
+	<statement>drop TRIGGER if exists items_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER items_sync_insert after insert ON items
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update items set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		--for duplicated names with o_qty
+		insert into table_action(table_name,table_cond,ref_no,action_)
+		select
+		'items','update items set o_qty=o_qty+'||NEW.o_qty||',o_cost='||NEW.o_cost
+		||',param1=online_ref2,online_ref2=null '
+		||' where online_ref2=(select id from items where name='''||NEW.name||''''||')||'':''||
+		(select value_ from sys_conf where id=100)'
+		|| ' and param1 is null and name='''||NEW.name||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'query' where NEW.o_qty!=0 and NEW.o_cost!=0;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('items','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		--for duplicated names with o_qty reset ref2
+		insert into table_action(table_name,table_cond,ref_no,action_)
+		select
+		'items','update items set online_ref2='||
+		''''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		||' where online_ref2 is null and name='''||NEW.name||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'query' where NEW.o_qty!=0 and NEW.o_cost!=0;
+
+		END
+	</statement>
+	<statement>drop TRIGGER if exists items_sync_update</statement>
+	<statement>
+		CREATE TRIGGER items_sync_update after update ON items
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null)
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('items','where (param1 is not null and param1='''||NEW.online_ref2||''') or online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	-- transactions (Not bills)
+	<statement>drop TRIGGER if exists transactions_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER transactions_sync_insert after insert ON transactions
+		when (NEW.online_ref2 is null and NEW.online_ref=0 and NEW.bill_id in(0,-1,-2,-3,-6) )
+		BEGIN
+		update transactions set online_ref2=(NEW.id)||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('transactions','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,(NEW.id)||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	--reInserted by dev_id with edit Doc or Daily
+	<statement>drop TRIGGER if exists transactions_sync_insert2</statement>
+	<statement>
+		CREATE TRIGGER transactions_sync_insert2 after insert ON transactions
+		when (NEW.online_ref2 is null and NEW.online_ref !=0 and NEW.bill_id in(-2,-3,-6) )
+		BEGIN
+		update transactions set online_ref2=(NEW.id)||':'||NEW.online_ref
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('transactions','where online_ref2='''||NEW.id||':'||NEW.online_ref||''''
+		,(NEW.id)||':'||NEW.online_ref
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists transactions_sync_update</statement>
+	<statement>
+		CREATE TRIGGER transactions_sync_update after update ON transactions
+		when (NEW.online_ref2 is not null and NEW.bill_id in(0,-1,-2,-3,-6)
+		and OLD.online_ref2 is not null
+		and not (OLD.[out]*1=0 and NEW.[out]*1=0)
+		)
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('transactions','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+
+
+	<statement>drop TRIGGER if exists transactions_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER transactions_sync_delete after delete ON transactions
+		when (OLD.online_ref2 is not null and OLD.bill_id in(0,-1,-2,-3,-6) )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('transactions','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+--bills
+	<statement>drop TRIGGER if exists bills_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER bills_sync_insert after insert ON bills
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update bills set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,(NEW.id)||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+
+	<statement>drop TRIGGER if exists bills_sync_update</statement>
+	<statement>
+		CREATE TRIGGER bills_sync_update after update ON bills
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		--no need as it is included in class code(delete before json_c)
+		--insert into table_action(table_name,table_cond,ref_no,action_)
+		--values ('bill_transactions','where bill_id=(select id from bills where online_ref2='''||NEW.online_ref2||''''||')'
+		--,NEW.online_ref2
+		--,'delete') ;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+
+
+	<statement>drop TRIGGER if exists bills_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER bills_sync_delete after delete ON bills
+		when (OLD.online_ref2 is not null   )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_)
+		values ('bill_transactions','where bill_id=(select id from bills where online_ref2='''||OLD.online_ref2||''''||')'
+		,OLD.online_ref2
+		,'delete') ;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills','where online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete');
+		END
+	</statement>
+
+
+--bills2
+	<statement>drop TRIGGER if exists bills2_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER bills2_sync_insert after insert ON bills2
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update bills2 set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills2','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,(NEW.id)||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	--update id as it is not autoincrement
+	<statement>drop TRIGGER if exists bills2_sync_insert_id</statement>
+	<statement>
+		CREATE TRIGGER bills2_sync_insert_id after insert ON bills2
+		when (NEW.online_ref2 is not null and NEW.id is null)
+		BEGIN
+		update bills2 set id=(select ifnull(max(a.id),0)+1   as _id from bills2 a)
+		where online_ref2=NEW.online_ref2 and id is null;
+		END
+	</statement>
+	<statement>drop TRIGGER if exists bills2_sync_update</statement>
+	<statement>
+		CREATE TRIGGER bills2_sync_update after update ON bills2
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null and OLD.id is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills2','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+
+	<statement>drop TRIGGER if exists bills2_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER bills2_sync_delete after delete ON bills2
+		when (OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_)
+		values ('bill_transactions2','where bill_id=(select id from bills2 where online_ref2='''||OLD.online_ref2||''''||')'
+		,OLD.online_ref2
+		,'delete') ;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('bills2','where online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete');
+		END
+	</statement>
+	--groups
+	<statement>drop TRIGGER if exists groups_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER groups_sync_insert after insert ON groups
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update groups set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('groups','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists groups_sync_update</statement>
+	<statement>
+		CREATE TRIGGER groups_sync_update after update ON groups
+		when (NEW.online_ref2 is not null  and OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('groups','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists groups_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER groups_sync_delete after delete ON groups
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('groups','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--account_tree
+	<statement>drop TRIGGER if exists account_tree_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER account_tree_sync_insert after insert ON account_tree
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update account_tree set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('account_tree','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists account_tree_sync_update</statement>
+	<statement>
+		CREATE TRIGGER account_tree_sync_update after update ON account_tree
+		when (NEW.online_ref2 is not null  and OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('account_tree','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists account_tree_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER account_tree_sync_delete after delete ON account_tree
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('account_tree','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--branches
+	<statement>drop TRIGGER if exists branches_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER branches_sync_insert after insert ON branches
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update branches set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('branches','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists branches_sync_update</statement>
+	<statement>
+		CREATE TRIGGER branches_sync_update after update ON branches
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('branches','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists branches_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER branches_sync_delete after delete ON branches
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('branches','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--customers
+	<statement>drop TRIGGER if exists customers_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER customers_sync_insert after insert ON customers
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update customers set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('customers','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists customers_sync_update</statement>
+	<statement>
+		CREATE TRIGGER customers_sync_update after update ON customers
+		when (NEW.online_ref2 is not null  and OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('customers','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists customers_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER customers_sync_delete after delete ON customers
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('customers','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--currency
+	<statement>drop TRIGGER if exists currency_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER currency_sync_insert after insert ON currency
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update currency set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists currency_sync_update</statement>
+	<statement>
+		CREATE TRIGGER currency_sync_update after update ON currency
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists currency_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER currency_sync_delete after delete ON currency
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--currency_price
+	<statement>drop TRIGGER if exists currency_price_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER currency_price_sync_insert after insert ON currency_price
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update currency_price set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency_price','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists currency_price_sync_update</statement>
+	<statement>
+		CREATE TRIGGER currency_price_sync_update after update ON currency_price
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency_price','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists currency_price_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER currency_price_sync_delete after delete ON currency_price
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('currency_price','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--item_type
+	<statement>drop TRIGGER if exists item_type_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER item_type_sync_insert after insert ON item_type
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update item_type set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_type','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists item_type_sync_update</statement>
+	<statement>
+		CREATE TRIGGER item_type_sync_update after update ON item_type
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_type','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists item_type_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER item_type_sync_delete after delete ON item_type
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_type','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--units
+	<statement>drop TRIGGER if exists units_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER units_sync_insert after insert ON units
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update units set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('units','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists units_sync_update</statement>
+	<statement>
+		CREATE TRIGGER units_sync_update after update ON units
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('units','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists units_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER units_sync_delete after delete ON units
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('units','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--unit_item
+	<statement>drop TRIGGER if exists unit_item_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER unit_item_sync_insert after insert ON unit_item
+		when (NEW.online_ref2 is null and NEW.unit_id!=(select b.unit_id from items b where b.id=NEW.item_id))
+		BEGIN
+		update unit_item set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('unit_item','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists unit_item_sync_update</statement>
+	<statement>
+		CREATE TRIGGER unit_item_sync_update after update ON unit_item
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('unit_item','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+    --2025-12 when change base unit and old base unit is used in bills(not deleted and ref still null)
+    <statement>drop TRIGGER if exists unit_item_sync_update2</statement>
+    <statement>
+        CREATE TRIGGER unit_item_sync_update2 after update ON unit_item
+        when (NEW.online_ref2 is  null and OLD.online_ref2 is  null
+        and NEW.unit_id!=(select b.unit_id from items b where b.id=NEW.item_id)
+        )
+        BEGIN
+        update unit_item set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+        where id=NEW.id;
+        insert into table_action(table_name,table_cond,ref_no,action_) values
+        ('unit_item',
+        'where item_id=(select id from items where name='''||(select name from items where id=NEW.item_id)||''')
+        and  unit_id=(select id from units where name='''||(select name from units where id=NEW.unit_id)||''')
+        '
+        ,NEW.id||':'||(select value_ from sys_conf where id=100)
+        ,'update');
+        END
+    </statement>
+	<statement>drop TRIGGER if exists unit_item_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER unit_item_sync_delete after delete ON unit_item
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('unit_item','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--tax
+	<statement>drop TRIGGER if exists tax_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER tax_sync_insert after insert ON tax
+		when (NEW.online_ref2 is null )
+		BEGIN
+		update tax set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('tax','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists tax_sync_update</statement>
+	<statement>
+		CREATE TRIGGER tax_sync_update after update ON tax
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('tax','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists tax_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER tax_sync_delete after delete ON tax
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('tax','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+	--item_price
+	<statement>drop TRIGGER if exists item_price_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER item_price_sync_insert after insert ON item_price
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update item_price set online_ref2=NEW.rowid||':'||(select value_ from sys_conf where id=100)
+		where rowid=NEW.rowid;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_price','where online_ref2='''||NEW.rowid||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.rowid||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists item_price_sync_update</statement>
+	<statement>
+		CREATE TRIGGER item_price_sync_update after update ON item_price
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_price','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists item_price_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER item_price_sync_delete after delete ON item_price
+		when (OLD.online_ref2 is not null   )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('item_price','where online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete');
+		END
+	</statement>
+	--cus_limit
+	<statement>drop TRIGGER if exists cus_limit_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER cus_limit_sync_insert after insert ON cus_limit
+		when (NEW.online_ref2 is null )
+		BEGIN
+		update cus_limit set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('cus_limit','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists cus_limit_sync_update</statement>
+	<statement>
+		CREATE TRIGGER cus_limit_sync_update after update ON cus_limit
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('cus_limit','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists cus_limit_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER cus_limit_sync_delete after delete ON cus_limit
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('cus_limit','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+
+	--reminders
+	<statement>drop TRIGGER if exists reminders_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER reminders_sync_insert after insert ON reminders
+		when (NEW.online_ref2 is null )
+		BEGIN
+		update reminders set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('reminders','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists reminders_sync_update</statement>
+	<statement>
+		CREATE TRIGGER reminders_sync_update after update ON reminders
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('reminders','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists reminders_sync_delete</statement>
+	<statement>
+		CREATE TRIGGER reminders_sync_delete after delete ON reminders
+		when (OLD.online_ref2 is not null )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('reminders','where online_ref2 is not null and online_ref2='''||OLD.online_ref2||''''
+		,OLD.online_ref2
+		,'delete' );
+		END
+	</statement>
+
+	--users
+	<statement>drop TRIGGER if exists users_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER users_sync_insert after insert ON users
+		when (NEW.online_ref2 is null)
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('users','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		update users set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		--relogin
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('online_relogin','1'
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'pref');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists users_sync_update</statement>
+	<statement>
+		CREATE TRIGGER users_sync_update after update ON users
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null   )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('users','where online_ref2='''||NEW.online_ref2||''''
+		,NEW.online_ref2
+		,'update');
+		--relogin
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('online_relogin','1'
+		,NEW.online_ref2
+		,'pref');
+		END
+	</statement>
+	<statement>drop TRIGGER if exists users_sync_update0</statement>
+	<statement>
+		CREATE TRIGGER users_sync_update0 after update ON users
+		when (NEW.online_ref2 is null  and NEW.id=0 and NEW.is_active=1   )
+		BEGIN
+		update users set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('users','where id=0'
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'update');
+		END
+	</statement>
+	--user_priv--only update
+	--with first update
+	<statement>drop TRIGGER if exists user_priv_sync_update_b</statement>
+	<statement>
+		CREATE TRIGGER user_priv_sync_update_b after update ON user_priv
+		when (NEW.online_ref2 is null  )
+		BEGIN
+		update user_priv set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		END
+	</statement>
+	--without old ref2
+	<statement>drop TRIGGER if exists user_priv_sync_update</statement>
+	<statement>
+		CREATE TRIGGER user_priv_sync_update after update ON user_priv
+		when (NEW.online_ref2 is not null and OLD.online_ref2 is not null  )
+		BEGIN
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('user_priv','where screen_id='''||NEW.screen_id||''''
+		||' and user_id=(select c.id from users c where c.name='
+		||''''||((select b.name from users b where b.id=NEW.user_id))||''''||')'
+		,NEW.online_ref2
+		,'update');
+		--relogin
+		--insert into table_action(table_name,table_cond,ref_no,action_) values
+	--	('online_relogin','1'
+	--	,NEW.online_ref2
+--		,'pref');
+		END
+	</statement>
+	--closing_year--only insert
+	<statement>drop TRIGGER if exists closing_year_sync_insert</statement>
+	<statement>
+		CREATE TRIGGER closing_year_sync_insert after insert ON closing_year
+		when (NEW.online_ref2 is null)
+		BEGIN
+		update closing_year set online_ref2=NEW.id||':'||(select value_ from sys_conf where id=100)
+		where id=NEW.id;
+		insert into table_action(table_name,table_cond,ref_no,action_) values
+		('closing_year','where online_ref2='''||NEW.id||':'||(select value_ from sys_conf where id=100)||''''
+		,NEW.id||':'||(select value_ from sys_conf where id=100)
+		,'insert');
+		END
+	</statement>
+
+</sql>

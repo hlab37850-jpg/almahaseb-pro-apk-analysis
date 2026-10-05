@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="right"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="100"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <AutoCompleteTextView
+        android:gravity="right"
+        android:id="@+id/cost_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/cost_account"
+        android:singleLine="true"
+        android:layout_weight="50">
+        <requestFocus/>
+    </AutoCompleteTextView>
+    <EditText
+        android:gravity="center"
+        android:id="@+id/item_price"
+        android:background="@drawable/table_row_bg5"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text=""
+        android:hint="@string/total_other_cost"
+        android:singleLine="true"
+        android:layout_weight="30"
+        android:inputType="numberDecimal"/>
+    <TextView
+        android:gravity="center"
+        android:id="@+id/item_price_hdr"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/total_with_cost"
+        android:layout_weight="20"/>
+</LinearLayout>

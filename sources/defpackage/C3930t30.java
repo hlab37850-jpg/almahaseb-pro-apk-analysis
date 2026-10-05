@@ -1,0 +1,27 @@
+package defpackage;
+
+import com.google.android.gms.auth.api.signin.internal.zbe;
+import com.google.android.gms.auth.api.signin.internal.zbs;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.Status;
+
+/* JADX INFO: renamed from: t30, reason: case insensitive filesystem */
+/* JADX INFO: loaded from: classes2.dex */
+public final class C3930t30 extends AbstractC4011u30 {
+    public C3930t30(GoogleApiClient googleApiClient) {
+        super(googleApiClient);
+    }
+
+    @Override // com.google.android.gms.common.api.internal.BaseImplementation.ApiMethodImpl
+    public final /* bridge */ /* synthetic */ void doExecute(Api.AnyClient anyClient) {
+        zbe zbeVar = (zbe) anyClient;
+        ((zbs) zbeVar.getService()).zbc(new BinderC3768r30(this), zbeVar.zba());
+    }
+
+    @Override // com.google.android.gms.common.api.internal.BasePendingResult
+    public final /* bridge */ /* synthetic */ Result createFailedResult(Status status) {
+        return status;
+    }
+}

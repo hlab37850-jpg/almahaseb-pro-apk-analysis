@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="@string/pref_curr_list"
+        android:summary="@string/pref_curr">
+        <intent
+            android:targetPackage="info.aalmoghalis.inventory"
+            android:action="android.intent.action.VIEW"
+            android:targetClass=".old.CurrList_edit"/>
+    </Preference>
+</PreferenceScreen>

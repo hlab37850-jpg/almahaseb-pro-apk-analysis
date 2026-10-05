@@ -1,0 +1,51 @@
+﻿/*--delete old data all type of bills --*/
+ delete from requests_bills_det where exists (select * from  requests a,requests_bills b
+ where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+ 	and a.id=b.req_id and b.bill_sys=requests_bills_det.bill_id  and a.tr_type=b.tr_type );
+  delete from requests_bills where exists (select * from  requests a
+  where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+ and a.id=requests_bills.req_id  and a.tr_type=requests_bills.tr_type );
+ delete from  requests
+ where status=1 and date(date_)!=strftime('%Y-%m-%d','now','localtime')
+ and tr_type in(1,2,3,4,7);
+ 
+ /*--delete old currency--*/
+ delete from requests_curr_price where exists (select * from  requests a,requests_curr b
+  where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  	and a.id=b.req_id and b.req_id=requests_curr_price.req_id  and a.tr_type=-202 );
+ 
+ delete from requests_curr where exists (select * from  requests a
+ where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  and a.id=requests_curr.req_id  and a.tr_type=-202 );
+ 
+  delete from  requests
+  where status=1 and date(date_)!=strftime('%Y-%m-%d','now','localtime')
+  and tr_type=-202;
+  
+ /*--delete old items--*/
+ delete from requests_items_price where exists (select * from  requests a,requests_items b
+ where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+and a.id=b.req_id and b.req_id=requests_items_price.req_id  and a.tr_type=-200);
+  
+ 	delete from requests_items_unit where exists (select * from  requests a,requests_items b
+  where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  	and a.id=b.req_id and b.req_id=requests_items_unit.req_id  and a.tr_type=-200);
+  
+  delete from requests_items where exists (select * from  requests a
+ where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  and a.id=requests_items.req_id  and a.tr_type=-200 );
+  
+  delete from  requests
+  where status=1 and date(date_)!=strftime('%Y-%m-%d','now','localtime')
+  and tr_type=-200;
+  
+  /*--delete old names--*/
+  delete from requests_names where exists (select * from  requests a
+  where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+ and a.id=requests_names.req_id  and a.tr_type=-201 );
+ delete from  requests
+ where status=1 and date(date_)!=strftime('%Y-%m-%d','now','localtime')
+ and tr_type=-201;
+
+ /*--delete old requests_out--*/
+delete from requests_out  where status=1 and date(date_)!=strftime('%Y-%m-%d','now','localtime');

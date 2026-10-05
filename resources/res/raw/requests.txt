@@ -1,0 +1,152 @@
+﻿/* --bills with tr_type=1 */
+/*-- check cus names and currency */
+/*--update trim--*/
+ update requests_bills
+ set cus_name=(cus_name),cash_name=(cash_name)
+ ,curr_name=(curr_name)
+ where status=-1 and tr_type in(1,2);
+ /*--execlude closed year--*/
+ update requests_bills set status=0
+ where  (date(requests_bills.date_)<=
+  (select ifnull(max(closing_year.date_),date(requests_bills.date_,'-1 day')) from closing_year));
+
+ INSERT into customers(name,acc_p_id)
+ select DISTINCT (cus_name)  name,123 acc_p_id from requests_bills
+ where status=-1 and tr_type=1
+ and not EXISTS(select * from customers where name=(cus_name)) ;
+  INSERT into customers(name,acc_p_id)
+  select DISTINCT (cus_name)  name,221 acc_p_id from requests_bills
+  where status=-1 and tr_type=2
+  and not EXISTS(select * from customers where name=(cus_name)) ;
+
+ INSERT into customers(name,acc_p_id)
+ select DISTINCT (cash_name)  name,121 acc_p_id from requests_bills
+ where status=-1 and tr_type in(1,2)
+ and not EXISTS(select * from customers where name=(cash_name)) ;
+
+ INSERT into currency(name,code_name)
+ select DISTINCT (curr_name)  name ,(curr_name)  from requests_bills where status=-1
+ and tr_type in(1,2)
+ and not EXISTS(select * from currency where name=(curr_name)) ;
+
+ update requests_bills
+ set cus_id=(select id from customers where name=(cus_name))
+ where status=-1 and tr_type in(1,2) ;
+
+ update requests_bills
+ set cash_id=(select id from customers where param1=(select b.param1 from branches b where b.id=br_id))
+ where status=-1 and tr_type in(1,2) ;
+
+ update requests_bills
+ set curr_id=(select id from currency where name=(curr_name))
+ where status=-1 and tr_type in(1,2) ;
+
+/*--check items*/
+
+ /*--insert units--*/
+ INSERT into units(name,code)
+ select DISTINCT unit_name ,unit_name from requests_bills a, requests_bills_det b
+ where a.status=-1 and a.tr_type in(1,2) and a.bill_sys=b.bill_id
+ and not EXISTS(select * from units where name=(unit_name))  ;
+ /*--insert base units--*/
+ INSERT into units(name,code)
+ select DISTINCT base_name,base_name  from requests_bills a, requests_bills_det b
+ where a.status=-1 and a.tr_type in(1,2) and a.bill_sys=b.bill_id
+ and not EXISTS(select * from units where name=(base_name))  ;
+
+ INSERT into items(name,unit_id,item_type_id)
+ select DISTINCT (item_name)  name,c.id unit_id,0  from requests_bills a, requests_bills_det b,units c
+ where a.status=-1 and a.tr_type in(1,2) and a.bill_sys=b.bill_id
+ and (b.item_unit )= c.name
+ and not EXISTS(select * from items where name=(item_name))  ;
+ update items set item_type_id=0 where item_type_id is null;
+
+ update requests_bills_det
+ set item_id=(select id from items where name=(item_name))
+ ,item_type_id=(select item_type_id from items where name=(item_name))
+ where item_id is null
+ and EXISTS(select * from requests_bills where status=-1 and tr_type in(1,2) and bill_sys=requests_bills_det.bill_id) ;
+
+ update requests_bills_det
+ set base_unit=(select id from units where name=(base_name))
+ ,unit_id=(select id from units where name=(unit_name))
+ where EXISTS(select * from requests_bills where status=-1 and tr_type in(1,2) and bill_sys=requests_bills_det.bill_id) ;
+
+  INSERT into unit_item( item_id,unit_id,u_val )
+ select  DISTINCT item_id,unit_id,u_val from requests_bills_det a
+ where EXISTS(select * from requests_bills where status=-1 and tr_type in(1,2) and bill_sys=a.bill_id)
+ and a.u_val!=1
+ and not EXISTS(select * from unit_item b where b.item_id=a.item_id and a.unit_id=b.unit_id
+ and round(a.u_val,3)=round(b.u_val,3)
+ ) ;
+
+/*--Insert bill header--*/
+
+
+ delete from bill_transactions
+ where  exists( select * from
+ requests_bills a,bills b
+  where a.status=-1 and a.tr_type in(1,2) and a.tr_type=b.tr_type
+   and bill_transactions.bill_id=b.id
+ and a.br_id=b.br_id and a.bill_no2=b.bill_no2
+  and a.online_ref=b.bill_no2
+ and strftime('%m',a.date_)=strftime('%m',b.date_)
+ and a.cus_id=b.cus_id and b.online in(1,2) );
+
+
+
+ delete from bills
+ where online in(1,2)
+ and exists( select * from
+ requests_bills where status=-1 and tr_type in(1,2)
+ and br_id=bills.br_id and bill_no2=bills.bill_no2
+ and requests_bills.online_ref=bills.bill_no2
+ and strftime('%m',date_)=strftime('%m',bills.date_)
+ and cus_id=bills.cus_id );
+
+ insert into bills (id,tr_type,date_,amount,d_amount,cus_id,tran_status,bill_type,bill_no2,remarks,curr_id,br_id,
+ cash_id,is_back,bill_no,curr_price,curr_mod,t_val,tax_amount,online,online_ref,time_,cost2,remarks,paid_amount)
+ select bill_sys,tr_type,date_,amount,d_amount,cus_id,ifnull(tran_status,'2'),bill_type,bill_no2,remarks,curr_id,br_id,cash_id,is_back
+ ,(case when a.is_back=1 then
+ ifnull((select bill_sys from requests_bills where bill_id=a.bill_id and cus_id=a.cus_id and br_id=a.br_id),0)
+ else  0 end) bill_no,a.curr_price,(case when a.curr_price=0 then 0 else 1 end ) curr_mod
+ ,t_val,tax_amount,2,online_ref,time_,cost2,remarks,paid_amount
+ from requests_bills a
+ where a.status=-1 and a.tr_type in(1,2)
+  and ROWID=(select max(rowid) from requests_bills b where a.bill_id=b.bill_id and a.tr_type=b.tr_type and a.status=b.status);
+/*--Insert bill Details --*/
+ insert into bill_transactions(bill_id,item_id,item_type_id,qty,qty_t,cost_price,sls_u_price,curr_id,d_amount,remark,unit_id,u_val,base_unit,qty_pr)
+ select bill_id,item_id,ifnull(item_type_id,0),qty,qty_t,cost_price,sls_u_price,(select curr_id from requests_bills where requests_bills.bill_sys=a.bill_id) curr_id,d_amount2,remark2,
+ unit_id,u_val,base_unit,qty_pr
+ from requests_bills_det a
+  where EXISTS(select * from requests_bills c where c.status=-1 and c.tr_type in(1,2) and c.bill_sys=a.bill_id
+   and ROWID=(select max(rowid) from requests_bills b where c.bill_id=b.bill_id and c.tr_type=b.tr_type and c.status=b.status)
+  )  ;
+
+  /*--delete old item_price and insert new price only for sales--*/
+   delete  from item_price where EXISTS
+   (
+   select *
+   from requests_bills_det a,requests_bills c
+  where  c.status=-1 and
+  c.tr_type=1 and c.bill_sys=a.bill_id
+  and sls_u_price!=0
+  and item_price.item_id=a.item_id and item_price.unit_id=a.unit_id and c.curr_id=item_price.curr_id
+   and a.sls_u_price*a.u_val!=item_price.sls_u_price
+   );
+   insert  or replace into item_price(item_id,curr_id,unit_id,SLS_U_PRICE)
+   select distinct a.item_id,c.curr_id,a.unit_id,
+   a.sls_u_price*a.u_val
+    from requests_bills_det a,requests_bills c
+   where  c.status=-1 and
+   c.tr_type=1 and c.bill_sys=a.bill_id
+   and sls_u_price!=0
+    and not EXISTS(
+     select * from item_price d
+     where d.item_id=a.item_id and d.unit_id=a.unit_id and c.curr_id=d.curr_id and a.sls_u_price=d.sls_u_price);
+
+ /*--UPDATE STATUS--*/
+ update requests_bills set status=0 where tr_type in(1,2)
+ and exists(select * from bills b where b.id=requests_bills.bill_sys
+ and b.tr_type=requests_bills.tr_type and requests_bills.cus_id=b.cus_id and requests_bills.br_id=b.br_id );
+

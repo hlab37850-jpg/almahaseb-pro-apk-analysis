@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="@drawable/table_row_bg_m"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="100"
+        android:layout_alignParentRight="true">
+        <ImageView
+            android:gravity="center_horizontal"
+            android:id="@+id/import_excel"
+            android:padding="4dp"
+            android:clickable="false"
+            android:duplicateParentState="false"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/excel"
+            android:onClick="import_excel"/>
+        <ImageView
+            android:gravity="center"
+            android:id="@+id/img_add_amount"
+            android:padding="4dp"
+            android:clickable="false"
+            android:duplicateParentState="false"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/add2"
+            android:onClick="amount_add_btn"/>
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

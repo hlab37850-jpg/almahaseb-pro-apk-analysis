@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_user_profile">
+        <EditTextPreference
+            android:title="@string/pref_user_name"
+            android:key="prefUsername"
+            android:summary="@string/pref_user_name_summary"/>
+        <EditTextPreference
+            android:title="@string/pref_address"
+            android:key="prefAddress"
+            android:summary="@string/pref_address_summary"/>
+        <EditTextPreference
+            android:title="@string/pref_phone"
+            android:key="prefPhone"
+            android:summary="@string/pref_phone_summary"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_print_setting">
+        <CheckBoxPreference
+            android:title="@string/pref_print_user_profile"
+            android:key="prefPrintUser"
+            android:summary="@string/pref_print_user_profile_summary"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:title="@string/pref_print_date_profile"
+            android:key="prefPrintDate"
+            android:summary="@string/pref_print_date_summary"
+            android:defaultValue="true"/>
+        <ListPreference
+            android:entries="@array/blankLines"
+            android:title="@string/pref_blank_lines"
+            android:key="prefBlankLines"
+            android:summary="@string/pref_blank_lines_summary"
+            android:entryValues="@array/blankLinesValues"/>
+    </PreferenceCategory>
+</PreferenceScreen>

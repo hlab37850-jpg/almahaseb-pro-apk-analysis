@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@color/gold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <TextView
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:id="@+id/g_cnt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_email"
+            android:layout_weight="50"/>
+        <TextView
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:id="@+id/g_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/br_cash_name"
+            android:layout_weight="50"/>
+    </LinearLayout>
+</LinearLayout>

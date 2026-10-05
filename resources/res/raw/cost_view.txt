@@ -1,0 +1,117 @@
+﻿
+ /*-- v1.99 recreate items_cost_view to fix duplicate bills in closing data in Main reports */
+ /*-- bills_v.date_=bill_transactions_v.bill_date  */
+ drop view if exists items_cost_calc_v;
+ CREATE VIEW if not exists items_cost_calc_v as
+
+ 		-- Opening balance
+ 		select   c.id as item_id,c.o_br_id as br_id,0 to_br_id,c.o_date as date_,-1 bill_id,0 tr_type, 0 is_back,'' name,
+ 		0 bill_no,0 bill_no2,
+ 		c.o_qty as i_q,
+ 		(case when c.curr_id=0 then c.o_cost  else c.curr_price*c.o_cost end ) i_u, 0 o_q,0 as o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,0 adj_id,c.e_date e_date,0 id2
+ 		from items_v c
+ 		where c.o_qty !=0
+
+ 		union all
+ 		-- purchase and sales with is_back=0
+ 		--v1.120 adj2
+ 		select   b.item_id,a.br_id,a.br_id,a.date_,b.bill_id,a.tr_type,a.is_back,(select name from customers where id=a.cus_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		(case when a.tr_type in(2,21) then b.qty_pr*b.u_val*b.c_val else 0 end) i_q,(case when a.tr_type in(2,21) then
+ 		(case when a.curr_id=0 then b.cost_price+b.u_cost2-b.d_amount/b.u_val
+ 		else a.curr_price*(cost_price+b.u_cost2-b.d_amount/b.u_val) end )
+
+ 		else 0 end)/b.c_val i_u,
+ 		(case when a.tr_type in(1,11) then b.qty_pr*b.u_val*b.c_val else 0 end) o_q,(case when a.tr_type in(1,11) then
+ 		(case when a.curr_id=0 then b.sls_u_price-b.d_amount/b.u_val
+ 		else a.curr_price*(sls_u_price-b.d_amount/b.u_val ) end )
+ 		else 0 end)/b.c_val o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type in (1,2,11,21) and a.is_back=0
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+
+
+ 		union all
+
+ 		-- purchase and sales with is_back=1
+ 		--v1.120 adj2 no back with (11,21)
+ 		select   b.item_id,a.br_id,a.br_id,a.date_,b.bill_id,a.tr_type,a.is_back,(select name from customers where id=a.cus_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		(case when a.tr_type in(1,11)  then b.qty_pr*b.u_val*b.c_val else 0 end) i_q,
+ 		(case when a.tr_type in(1,11) then
+ 		(case when a.curr_id=0 then b.sls_u_price-b.d_amount/b.u_val
+ 		else a.curr_price*(sls_u_price-b.d_amount/b.u_val) end )
+
+ 		else 0 end)/b.c_val i_u,
+ 		(case when a.tr_type=2 then b.qty_pr*b.u_val*b.c_val else 0 end) o_q,
+ 		(case when a.tr_type=2 then
+ 		(case when a.curr_id=0 then b.cost_price+b.u_cost2-b.d_amount/b.u_val
+ 		else a.curr_price*(cost_price+b.u_cost2-b.d_amount/b.u_val ) end )
+ 		else 0 end)/b.c_val o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type in (1,2) and a.is_back=1
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+
+ 		--Order Iusse...OUT
+ 		union all
+ 		select  b.item_id,a.br_id,a.to_br_id,a.date_,b.bill_id,a.tr_type,a.is_back,(select name from branches where id=a.to_br_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		0 i_q,0 i_u,
+ 		b.qty_pr*b.u_val*b.c_val o_q,0 o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type =3
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+ 		union all
+
+ 		-- Order Issue...IN
+ 		select  b.item_id ,a.to_br_id,a.br_id,a.date_,b.bill_id,a.tr_type,a.is_back,(select name from branches where id=a.br_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		b.qty_pr*b.u_val*b.c_val i_q,0 i_u,
+ 		0 o_q,0 o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type =3
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+
+ 		--Adj...IN
+ 		union all
+ 		select  b.item_id ,a.br_id,a.to_br_id,a.date_,b.bill_id,a.tr_type,a.is_back,
+ 		(select name from adj_type where id=a.adj_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		b.qty_pr*b.u_val*b.c_val i_q,b.cost_price/b.c_val i_u,
+ 		0 o_q,0 o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type =4 and a.adj_id in (2,4)
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+
+ 		--Adj...OUT
+ 		union all
+ 		select  b.item_id ,a.br_id,a.to_br_id,a.date_,b.bill_id,a.tr_type,a.is_back,
+ 		(select name from adj_type where id=a.adj_id) name,
+ 		a.bill_no,a.bill_no2,
+ 		0 i_q,0 i_u,
+ 		b.qty_pr*b.u_val*b.c_val o_q,b.cost_price/b.c_val o_u,
+ 		0 n_q,0 n_u,0 n_t,0 r_u,a.adj_id,b.e_date e_date,ifnull(a.id2,a.id) id2
+ 		from bills_v a,bill_transactions_v b,items_v c
+ 		where a.id=b.bill_id and b.item_id=c.id
+ 		and a.tr_type =4 and a.adj_id not in(2,4)
+ 		--2024-12 old yrs
+ 		and a.date_=b.bill_date
+ 		order by a.date_,id2,b.bill_id desc,b.item_id ;

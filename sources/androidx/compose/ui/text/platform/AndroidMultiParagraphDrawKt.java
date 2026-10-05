@@ -1,0 +1,66 @@
+package androidx.compose.ui.text.platform;
+
+import android.graphics.Matrix;
+import android.graphics.Shader;
+import androidx.compose.ui.geometry.SizeKt;
+import androidx.compose.ui.graphics.Brush;
+import androidx.compose.ui.graphics.BrushKt;
+import androidx.compose.ui.graphics.Canvas;
+import androidx.compose.ui.graphics.ShaderBrush;
+import androidx.compose.ui.graphics.Shadow;
+import androidx.compose.ui.graphics.SolidColor;
+import androidx.compose.ui.graphics.drawscope.DrawStyle;
+import androidx.compose.ui.text.MultiParagraph;
+import androidx.compose.ui.text.ParagraphInfo;
+import androidx.compose.ui.text.style.TextDecoration;
+import com.itextpdf.tool.xml.html.HTML;
+import defpackage.AbstractC4492zt;
+import java.util.List;
+
+/* JADX INFO: loaded from: classes.dex */
+public final class AndroidMultiParagraphDrawKt {
+    /* JADX INFO: renamed from: drawMultiParagraph-7AXcY_I, reason: not valid java name */
+    public static final void m4927drawMultiParagraph7AXcY_I(MultiParagraph multiParagraph, Canvas canvas, Brush brush, float f, Shadow shadow, TextDecoration textDecoration, DrawStyle drawStyle, int i) {
+        AbstractC4492zt.h(multiParagraph, "$this$drawMultiParagraph");
+        AbstractC4492zt.h(canvas, HTML.Tag.CANVAS);
+        AbstractC4492zt.h(brush, "brush");
+        canvas.save();
+        if (multiParagraph.getParagraphInfoList$ui_text_release().size() <= 1 || (brush instanceof SolidColor)) {
+            m4929drawParagraphs7AXcY_I(multiParagraph, canvas, brush, f, shadow, textDecoration, drawStyle, i);
+        } else if (brush instanceof ShaderBrush) {
+            List<ParagraphInfo> paragraphInfoList$ui_text_release = multiParagraph.getParagraphInfoList$ui_text_release();
+            int size = paragraphInfoList$ui_text_release.size();
+            float fMax = 0.0f;
+            float height = 0.0f;
+            for (int i2 = 0; i2 < size; i2++) {
+                ParagraphInfo paragraphInfo = paragraphInfoList$ui_text_release.get(i2);
+                height += paragraphInfo.getParagraph().getHeight();
+                fMax = Math.max(fMax, paragraphInfo.getParagraph().getWidth());
+            }
+            Shader shaderMo3007createShaderuvyYCjk = ((ShaderBrush) brush).mo3007createShaderuvyYCjk(SizeKt.Size(fMax, height));
+            Matrix matrix = new Matrix();
+            shaderMo3007createShaderuvyYCjk.getLocalMatrix(matrix);
+            List<ParagraphInfo> paragraphInfoList$ui_text_release2 = multiParagraph.getParagraphInfoList$ui_text_release();
+            int size2 = paragraphInfoList$ui_text_release2.size();
+            for (int i3 = 0; i3 < size2; i3++) {
+                ParagraphInfo paragraphInfo2 = paragraphInfoList$ui_text_release2.get(i3);
+                paragraphInfo2.getParagraph().mo4572painthn5TExg(canvas, BrushKt.ShaderBrush(shaderMo3007createShaderuvyYCjk), f, shadow, textDecoration, drawStyle, i);
+                canvas.translate(0.0f, paragraphInfo2.getParagraph().getHeight());
+                matrix.setTranslate(0.0f, -paragraphInfo2.getParagraph().getHeight());
+                shaderMo3007createShaderuvyYCjk.setLocalMatrix(matrix);
+            }
+        }
+        canvas.restore();
+    }
+
+    /* JADX INFO: renamed from: drawParagraphs-7AXcY_I, reason: not valid java name */
+    private static final void m4929drawParagraphs7AXcY_I(MultiParagraph multiParagraph, Canvas canvas, Brush brush, float f, Shadow shadow, TextDecoration textDecoration, DrawStyle drawStyle, int i) {
+        List<ParagraphInfo> paragraphInfoList$ui_text_release = multiParagraph.getParagraphInfoList$ui_text_release();
+        int size = paragraphInfoList$ui_text_release.size();
+        for (int i2 = 0; i2 < size; i2++) {
+            ParagraphInfo paragraphInfo = paragraphInfoList$ui_text_release.get(i2);
+            paragraphInfo.getParagraph().mo4572painthn5TExg(canvas, brush, f, shadow, textDecoration, drawStyle, i);
+            canvas.translate(0.0f, paragraphInfo.getParagraph().getHeight());
+        }
+    }
+}

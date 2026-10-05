@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:icon="@drawable/s_act_pwd"
+        android:title="@string/pref_login_screen"
+        android:key="prefLogin"
+        android:summary="@string/pref_login_screen_summary"
+        android:defaultValue="false"/>
+    <Preference
+        android:icon="@drawable/s_pwd"
+        android:capitalize="words"
+        android:title="@string/pref_password"
+        android:key="prefPassword"
+        android:summary="@string/pref_password_summary"
+        android:defaultValue="@string/pref_default_password"/>
+</PreferenceScreen>

@@ -1,0 +1,25 @@
+package com.google.zxing.client.result;
+
+import com.google.zxing.Result;
+import defpackage.L;
+
+/* JADX INFO: loaded from: classes3.dex */
+public final class BookmarkDoCoMoResultParser extends L {
+    @Override // com.google.zxing.client.result.ResultParser
+    public URIParsedResult parse(Result result) {
+        String text = result.getText();
+        if (!text.startsWith("MEBKM:")) {
+            return null;
+        }
+        String strMatchSingleDoCoMoPrefixedField = L.matchSingleDoCoMoPrefixedField("TITLE:", text, true);
+        String[] strArrMatchDoCoMoPrefixedField = L.matchDoCoMoPrefixedField("URL:", text, true);
+        if (strArrMatchDoCoMoPrefixedField == null) {
+            return null;
+        }
+        String str = strArrMatchDoCoMoPrefixedField[0];
+        if (URIResultParser.isBasicallyValidURI(str)) {
+            return new URIParsedResult(str, strMatchSingleDoCoMoPrefixedField);
+        }
+        return null;
+    }
+}

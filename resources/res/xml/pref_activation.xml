@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:icon="@drawable/unlock"
+        android:capitalize="words"
+        android:title="@string/pref_code"
+        android:key="prefCode"
+        android:summary="@string/pref_code_summary"
+        android:defaultValue="@string/pref_default_password"/>
+</PreferenceScreen>

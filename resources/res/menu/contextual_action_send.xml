@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_send"
+        android:orderInCategory="100"
+        android:title="@string/send_items_name"
+        yourapp:showAsAction="withText|ifRoom"/>
+    <item
+        android:id="@+id/menu_customers"
+        android:visible="false"
+        android:orderInCategory="99"
+        android:title="@string/send_customer"
+        yourapp:showAsAction="withText|ifRoom"/>
+</menu>

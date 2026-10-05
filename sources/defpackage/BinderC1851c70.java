@@ -1,0 +1,23 @@
+package defpackage;
+
+import com.google.android.gms.auth.api.proxy.AuthApiStatusCodes;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.internal.TaskUtil;
+import com.google.android.gms.internal.auth.zzbd;
+import com.google.android.gms.internal.auth.zzbo;
+import com.google.android.gms.tasks.TaskCompletionSource;
+
+/* JADX INFO: renamed from: c70, reason: case insensitive filesystem */
+/* JADX INFO: loaded from: classes2.dex */
+public final class BinderC1851c70 extends zzbd {
+    public final /* synthetic */ TaskCompletionSource a;
+
+    public BinderC1851c70(zzbo zzboVar, TaskCompletionSource taskCompletionSource) {
+        this.a = taskCompletionSource;
+    }
+
+    @Override // com.google.android.gms.internal.auth.zzbd, com.google.android.gms.internal.auth.zzbg
+    public final void zzc(String str) {
+        TaskUtil.setResultOrApiException(str != null ? Status.RESULT_SUCCESS : new Status(AuthApiStatusCodes.AUTH_APP_CERT_ERROR), str, this.a);
+    }
+}

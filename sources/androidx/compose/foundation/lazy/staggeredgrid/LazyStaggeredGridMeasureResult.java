@@ -1,0 +1,151 @@
+package androidx.compose.foundation.lazy.staggeredgrid;
+
+import androidx.compose.foundation.gestures.Orientation;
+import androidx.compose.ui.layout.AlignmentLine;
+import androidx.compose.ui.layout.MeasureResult;
+import defpackage.AbstractC0419Di;
+import defpackage.AbstractC4492zt;
+import java.util.List;
+import java.util.Map;
+
+/* JADX INFO: loaded from: classes.dex */
+public final class LazyStaggeredGridMeasureResult implements LazyStaggeredGridLayoutInfo, MeasureResult {
+    private final int afterContentPadding;
+    private final int beforeContentPadding;
+    private final boolean canScrollBackward;
+    private final boolean canScrollForward;
+    private final float consumedScroll;
+    private final int[] firstVisibleItemIndices;
+    private final int[] firstVisibleItemScrollOffsets;
+    private final boolean isVertical;
+    private final int mainAxisItemSpacing;
+    private final MeasureResult measureResult;
+    private final Orientation orientation;
+    private final int totalItemsCount;
+    private final int viewportEndOffset;
+    private final long viewportSize;
+    private final int viewportStartOffset;
+    private final List<LazyStaggeredGridItemInfo> visibleItemsInfo;
+
+    public /* synthetic */ LazyStaggeredGridMeasureResult(int[] iArr, int[] iArr2, float f, MeasureResult measureResult, boolean z, boolean z2, boolean z3, int i, List list, long j, int i2, int i3, int i4, int i5, int i6, AbstractC0419Di abstractC0419Di) {
+        this(iArr, iArr2, f, measureResult, z, z2, z3, i, list, j, i2, i3, i4, i5, i6);
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getAfterContentPadding() {
+        return this.afterContentPadding;
+    }
+
+    @Override // androidx.compose.ui.layout.MeasureResult
+    public Map<AlignmentLine, Integer> getAlignmentLines() {
+        return this.measureResult.getAlignmentLines();
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getBeforeContentPadding() {
+        return this.beforeContentPadding;
+    }
+
+    public final boolean getCanScrollBackward() {
+        return this.canScrollBackward;
+    }
+
+    public final boolean getCanScrollForward() {
+        return this.canScrollForward;
+    }
+
+    public final float getConsumedScroll() {
+        return this.consumedScroll;
+    }
+
+    public final int[] getFirstVisibleItemIndices() {
+        return this.firstVisibleItemIndices;
+    }
+
+    public final int[] getFirstVisibleItemScrollOffsets() {
+        return this.firstVisibleItemScrollOffsets;
+    }
+
+    @Override // androidx.compose.ui.layout.MeasureResult
+    public int getHeight() {
+        return this.measureResult.getHeight();
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getMainAxisItemSpacing() {
+        return this.mainAxisItemSpacing;
+    }
+
+    public final MeasureResult getMeasureResult() {
+        return this.measureResult;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public Orientation getOrientation() {
+        return this.orientation;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getTotalItemsCount() {
+        return this.totalItemsCount;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getViewportEndOffset() {
+        return this.viewportEndOffset;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    /* JADX INFO: renamed from: getViewportSize-YbymL2g */
+    public long mo652getViewportSizeYbymL2g() {
+        return this.viewportSize;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public int getViewportStartOffset() {
+        return this.viewportStartOffset;
+    }
+
+    @Override // androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridLayoutInfo
+    public List<LazyStaggeredGridItemInfo> getVisibleItemsInfo() {
+        return this.visibleItemsInfo;
+    }
+
+    @Override // androidx.compose.ui.layout.MeasureResult
+    public int getWidth() {
+        return this.measureResult.getWidth();
+    }
+
+    public final boolean isVertical() {
+        return this.isVertical;
+    }
+
+    @Override // androidx.compose.ui.layout.MeasureResult
+    public void placeChildren() {
+        this.measureResult.placeChildren();
+    }
+
+    /* JADX WARN: Multi-variable type inference failed */
+    private LazyStaggeredGridMeasureResult(int[] iArr, int[] iArr2, float f, MeasureResult measureResult, boolean z, boolean z2, boolean z3, int i, List<? extends LazyStaggeredGridItemInfo> list, long j, int i2, int i3, int i4, int i5, int i6) {
+        AbstractC4492zt.h(iArr, "firstVisibleItemIndices");
+        AbstractC4492zt.h(iArr2, "firstVisibleItemScrollOffsets");
+        AbstractC4492zt.h(measureResult, "measureResult");
+        AbstractC4492zt.h(list, "visibleItemsInfo");
+        this.firstVisibleItemIndices = iArr;
+        this.firstVisibleItemScrollOffsets = iArr2;
+        this.consumedScroll = f;
+        this.measureResult = measureResult;
+        this.canScrollForward = z;
+        this.canScrollBackward = z2;
+        this.isVertical = z3;
+        this.totalItemsCount = i;
+        this.visibleItemsInfo = list;
+        this.viewportSize = j;
+        this.viewportStartOffset = i2;
+        this.viewportEndOffset = i3;
+        this.beforeContentPadding = i4;
+        this.afterContentPadding = i5;
+        this.mainAxisItemSpacing = i6;
+        this.orientation = z3 ? Orientation.Vertical : Orientation.Horizontal;
+    }
+}

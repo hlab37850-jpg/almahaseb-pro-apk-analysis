@@ -1,0 +1,127 @@
+package androidx.compose.material3;
+
+import androidx.compose.foundation.layout.Arrangement;
+import androidx.compose.foundation.layout.PaddingKt;
+import androidx.compose.foundation.layout.PaddingValues;
+import androidx.compose.foundation.layout.RowKt;
+import androidx.compose.foundation.layout.RowScopeInstance;
+import androidx.compose.foundation.layout.SizeKt;
+import androidx.compose.runtime.Applier;
+import androidx.compose.runtime.Composable;
+import androidx.compose.runtime.ComposableTarget;
+import androidx.compose.runtime.ComposablesKt;
+import androidx.compose.runtime.Composer;
+import androidx.compose.runtime.ComposerKt;
+import androidx.compose.runtime.SkippableUpdater;
+import androidx.compose.runtime.Updater;
+import androidx.compose.ui.Alignment;
+import androidx.compose.ui.Modifier;
+import androidx.compose.ui.layout.LayoutKt;
+import androidx.compose.ui.layout.MeasurePolicy;
+import androidx.compose.ui.node.ComposeUiNode;
+import androidx.compose.ui.platform.CompositionLocalsKt;
+import androidx.compose.ui.platform.ViewConfiguration;
+import androidx.compose.ui.semantics.SemanticsModifierKt;
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver;
+import androidx.compose.ui.unit.Density;
+import androidx.compose.ui.unit.LayoutDirection;
+import defpackage.AbstractC2233fv;
+import defpackage.AbstractC4492zt;
+import defpackage.FW;
+import defpackage.InterfaceC0526Fp;
+import defpackage.InterfaceC0552Gp;
+import defpackage.InterfaceC3588op;
+import defpackage.InterfaceC3750qp;
+
+/* JADX INFO: loaded from: classes.dex */
+public final class ListItemKt$ListItem$3 extends AbstractC2233fv implements InterfaceC0526Fp {
+    final /* synthetic */ int $$dirty;
+    final /* synthetic */ InterfaceC0552Gp $content;
+    final /* synthetic */ float $minHeight;
+    final /* synthetic */ PaddingValues $paddingValues;
+
+    /* JADX INFO: renamed from: androidx.compose.material3.ListItemKt$ListItem$3$1, reason: invalid class name */
+    public static final class AnonymousClass1 extends AbstractC2233fv implements InterfaceC3750qp {
+        public static final AnonymousClass1 INSTANCE = new AnonymousClass1();
+
+        public AnonymousClass1() {
+            super(1);
+        }
+
+        public final void invoke(SemanticsPropertyReceiver semanticsPropertyReceiver) {
+            AbstractC4492zt.h(semanticsPropertyReceiver, "$this$semantics");
+        }
+
+        @Override // defpackage.InterfaceC3750qp
+        public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+            invoke((SemanticsPropertyReceiver) obj);
+            return FW.a;
+        }
+    }
+
+    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
+    public ListItemKt$ListItem$3(float f, PaddingValues paddingValues, InterfaceC0552Gp interfaceC0552Gp, int i) {
+        super(2);
+        this.$minHeight = f;
+        this.$paddingValues = paddingValues;
+        this.$content = interfaceC0552Gp;
+        this.$$dirty = i;
+    }
+
+    @Override // defpackage.InterfaceC0526Fp
+    /* JADX INFO: renamed from: invoke */
+    public /* bridge */ /* synthetic */ Object mo13invoke(Object obj, Object obj2) {
+        invoke((Composer) obj, ((Number) obj2).intValue());
+        return FW.a;
+    }
+
+    @ComposableTarget(applier = "androidx.compose.ui.UiComposable")
+    @Composable
+    public final void invoke(Composer composer, int i) {
+        if ((i & 11) == 2 && composer.getSkipping()) {
+            composer.skipToGroupEnd();
+            return;
+        }
+        if (ComposerKt.isTraceInProgress()) {
+            ComposerKt.traceEventStart(1393735016, i, -1, "androidx.compose.material3.ListItem.<anonymous> (ListItem.kt:220)");
+        }
+        Modifier modifierSemantics = SemanticsModifierKt.semantics(PaddingKt.padding(SizeKt.m520heightInVpY3zN4$default(Modifier.Companion, this.$minHeight, 0.0f, 2, null), this.$paddingValues), true, AnonymousClass1.INSTANCE);
+        InterfaceC0552Gp interfaceC0552Gp = this.$content;
+        int i2 = (this.$$dirty >> 15) & 7168;
+        composer.startReplaceableGroup(693286680);
+        MeasurePolicy measurePolicyRowMeasurePolicy = RowKt.rowMeasurePolicy(Arrangement.INSTANCE.getStart(), Alignment.Companion.getTop(), composer, 0);
+        composer.startReplaceableGroup(-1323940314);
+        Density density = (Density) composer.consume(CompositionLocalsKt.getLocalDensity());
+        LayoutDirection layoutDirection = (LayoutDirection) composer.consume(CompositionLocalsKt.getLocalLayoutDirection());
+        ViewConfiguration viewConfiguration = (ViewConfiguration) composer.consume(CompositionLocalsKt.getLocalViewConfiguration());
+        ComposeUiNode.Companion companion = ComposeUiNode.Companion;
+        InterfaceC3588op constructor = companion.getConstructor();
+        InterfaceC0552Gp interfaceC0552GpMaterializerOf = LayoutKt.materializerOf(modifierSemantics);
+        if (!(composer.getApplier() instanceof Applier)) {
+            ComposablesKt.invalidApplier();
+        }
+        composer.startReusableNode();
+        if (composer.getInserting()) {
+            composer.createNode(constructor);
+        } else {
+            composer.useNode();
+        }
+        composer.disableReusing();
+        Composer composerM2661constructorimpl = Updater.m2661constructorimpl(composer);
+        Updater.m2668setimpl(composerM2661constructorimpl, measurePolicyRowMeasurePolicy, companion.getSetMeasurePolicy());
+        Updater.m2668setimpl(composerM2661constructorimpl, density, companion.getSetDensity());
+        Updater.m2668setimpl(composerM2661constructorimpl, layoutDirection, companion.getSetLayoutDirection());
+        Updater.m2668setimpl(composerM2661constructorimpl, viewConfiguration, companion.getSetViewConfiguration());
+        composer.enableReusing();
+        interfaceC0552GpMaterializerOf.invoke(SkippableUpdater.m2650boximpl(SkippableUpdater.m2651constructorimpl(composer)), composer, 0);
+        composer.startReplaceableGroup(2058660585);
+        interfaceC0552Gp.invoke(RowScopeInstance.INSTANCE, composer, Integer.valueOf(((i2 >> 6) & 112) | 6));
+        composer.endReplaceableGroup();
+        composer.endNode();
+        composer.endReplaceableGroup();
+        composer.endReplaceableGroup();
+        if (ComposerKt.isTraceInProgress()) {
+            ComposerKt.traceEventEnd();
+        }
+    }
+}

@@ -1,0 +1,131 @@
+package org.apache.poi.ddf;
+
+import org.apache.poi.util.HexDump;
+import org.apache.poi.util.LittleEndian;
+
+/* JADX INFO: loaded from: classes2.dex */
+public final class EscherArrayProperty extends EscherComplexProperty {
+    private static final int FIXED_SIZE = 6;
+    private boolean emptyComplexPart;
+    private boolean sizeIncludesHeaderSize;
+
+    public EscherArrayProperty(short s, byte[] bArr) {
+        super(s, checkComplexData(bArr));
+        this.sizeIncludesHeaderSize = true;
+        this.emptyComplexPart = false;
+        this.emptyComplexPart = bArr.length == 0;
+    }
+
+    private static byte[] checkComplexData(byte[] bArr) {
+        return (bArr == null || bArr.length == 0) ? new byte[6] : bArr;
+    }
+
+    public static int getActualSizeOfElements(short s) {
+        return s < 0 ? (short) ((-s) >> 2) : s;
+    }
+
+    public byte[] getElement(int i) {
+        int actualSizeOfElements = getActualSizeOfElements(getSizeOfElements());
+        byte[] bArr = new byte[actualSizeOfElements];
+        System.arraycopy(this._complexData, (i * actualSizeOfElements) + 6, bArr, 0, actualSizeOfElements);
+        return bArr;
+    }
+
+    public int getNumberOfElementsInArray() {
+        return LittleEndian.getUShort(this._complexData, 0);
+    }
+
+    public int getNumberOfElementsInMemory() {
+        return LittleEndian.getUShort(this._complexData, 2);
+    }
+
+    public short getSizeOfElements() {
+        return LittleEndian.getShort(this._complexData, 4);
+    }
+
+    @Override // org.apache.poi.ddf.EscherComplexProperty, org.apache.poi.ddf.EscherProperty
+    public int serializeSimplePart(byte[] bArr, int i) {
+        LittleEndian.putShort(bArr, i, getId());
+        int length = this._complexData.length;
+        if (!this.sizeIncludesHeaderSize) {
+            length -= 6;
+        }
+        LittleEndian.putInt(bArr, i + 2, length);
+        return 6;
+    }
+
+    public int setArrayData(byte[] bArr, int i) {
+        if (this.emptyComplexPart) {
+            this._complexData = new byte[0];
+        } else {
+            short s = LittleEndian.getShort(bArr, i);
+            LittleEndian.getShort(bArr, i + 2);
+            int actualSizeOfElements = getActualSizeOfElements(LittleEndian.getShort(bArr, i + 4)) * s;
+            if (actualSizeOfElements == this._complexData.length) {
+                this._complexData = new byte[actualSizeOfElements + 6];
+                this.sizeIncludesHeaderSize = false;
+            }
+            byte[] bArr2 = this._complexData;
+            System.arraycopy(bArr, i, bArr2, 0, bArr2.length);
+        }
+        return this._complexData.length;
+    }
+
+    public void setElement(int i, byte[] bArr) {
+        int actualSizeOfElements = getActualSizeOfElements(getSizeOfElements());
+        System.arraycopy(bArr, 0, this._complexData, (i * actualSizeOfElements) + 6, actualSizeOfElements);
+    }
+
+    public void setNumberOfElementsInArray(int i) {
+        int actualSizeOfElements = (getActualSizeOfElements(getSizeOfElements()) * i) + 6;
+        byte[] bArr = this._complexData;
+        if (actualSizeOfElements != bArr.length) {
+            byte[] bArr2 = new byte[actualSizeOfElements];
+            System.arraycopy(bArr, 0, bArr2, 0, bArr.length);
+            this._complexData = bArr2;
+        }
+        LittleEndian.putShort(this._complexData, 0, (short) i);
+    }
+
+    public void setNumberOfElementsInMemory(int i) {
+        int actualSizeOfElements = (getActualSizeOfElements(getSizeOfElements()) * i) + 6;
+        byte[] bArr = this._complexData;
+        if (actualSizeOfElements != bArr.length) {
+            byte[] bArr2 = new byte[actualSizeOfElements];
+            System.arraycopy(bArr, 0, bArr2, 0, actualSizeOfElements);
+            this._complexData = bArr2;
+        }
+        LittleEndian.putShort(this._complexData, 2, (short) i);
+    }
+
+    public void setSizeOfElements(int i) {
+        LittleEndian.putShort(this._complexData, 4, (short) i);
+        int numberOfElementsInArray = (getNumberOfElementsInArray() * getActualSizeOfElements(getSizeOfElements())) + 6;
+        byte[] bArr = this._complexData;
+        if (numberOfElementsInArray != bArr.length) {
+            byte[] bArr2 = new byte[numberOfElementsInArray];
+            System.arraycopy(bArr, 0, bArr2, 0, 6);
+            this._complexData = bArr2;
+        }
+    }
+
+    @Override // org.apache.poi.ddf.EscherComplexProperty
+    public String toString() {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("    {EscherArrayProperty:\n");
+        stringBuffer.append("     Num Elements: " + getNumberOfElementsInArray() + '\n');
+        stringBuffer.append("     Num Elements In Memory: " + getNumberOfElementsInMemory() + '\n');
+        stringBuffer.append("     Size of elements: " + ((int) getSizeOfElements()) + '\n');
+        for (int i = 0; i < getNumberOfElementsInArray(); i++) {
+            stringBuffer.append("     Element " + i + ": " + HexDump.toHex(getElement(i)) + '\n');
+        }
+        stringBuffer.append("}\n");
+        return "propNum: " + ((int) getPropertyNumber()) + ", propName: " + EscherProperties.getPropertyName(getPropertyNumber()) + ", complex: " + isComplex() + ", blipId: " + isBlipId() + ", data: \n" + stringBuffer.toString();
+    }
+
+    public EscherArrayProperty(short s, boolean z, byte[] bArr) {
+        super(s, z, checkComplexData(bArr));
+        this.sizeIncludesHeaderSize = true;
+        this.emptyComplexPart = false;
+    }
+}

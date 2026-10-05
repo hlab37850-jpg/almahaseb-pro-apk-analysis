@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<meta charset="windows-1256">
+
+<html dir="rtl" lang="ar">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 12px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+        background: #f3f4f6;
+        direction: rtl;
+    }
+
+    .container {
+        max-width: 700px; /* looks good on both mobile and desktop */
+        margin: 0 auto;
+    }
+
+    .section-header {
+        background-color: #335ab8;
+        color: white;
+        text-align: center;
+        padding: 10px 14px;
+        margin: 8px 0;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .section-content {
+        background: #ffffff;
+        padding: 10px 14px;
+        margin: 0 0 8px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        line-height: 1.8;
+        font-size: 15px;
+    }
+
+    .section-content p {
+        margin: 0;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
+    }
+</style>
+<script type="text/javascript">
+//alert();
+function DisplayItem(ind){
+	//alert();
+	for(var i=1;i<=13;i++)
+		document.getElementById('item'+i).style.display='none';
+		
+	document.getElementById('item'+ind).style.display='block';
+	
+	return true;
+}
+function DisplayItem_details(ind1,ind2,ind3){
+	//alert();
+	for(var i=1;i<=12;i++)
+		document.getElementById('item'+i).style.display='none';
+		
+	document.getElementById('item'+ind1).style.display='block';
+	document.getElementById('item'+ind2).style.display='block';
+	document.getElementById('item'+ind3).style.display='block';
+	
+	
+	return true;
+}
+
+</script>
+
+<p id="overview" onclick="return DisplayItem(1);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>       مقدمة
+</b>
+<div id="item1" name="item1"  style="display:none1;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+مرحباً بك مع برنامج دفتر الحسابات 1.96
+<br>
+دقة , سهولة , أمان
+<br><br>
+
+        بالإضافة إلى سهولة الاستخدام, يوفر لك هذا البرنامج :
+        <br>
+1-         متابعة المبالغ الدائنة والمدينة.
+        <br>
+2-         إنجازالحسابات التجميعية آلياً.
+        <br>
+3-         مشاركة الحسابات عبر البلوتوث أو مواقع التواصل الإجتماعي.
+        <br>
+4-         دالة بحث/ترتيب تُمَكنك من الوصول السهل والسريع.
+        <br>
+5-         خاصية التصدير والإستيراد لقاعدة البيانات.
+        <br>        
+</p>
+</div>
+
+
+
+
+
+<p id="add" onclick="return DisplayItem(10);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+سياسة الخصوصية
+</b>
+</p>
+<div id="item10" name="item10"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+       يتطلب دفتر الحسابات امكانية الوصول الى اشياء محددة في جهازك الغرض منها هي تسهيل تعاملك مع البرنامج. مثل استيراد رقم الجوال لأحد عملائك المخزون في جهازك. ولتكن على دراية بالصلاحيات المطلوبة لدفتر الحسابات تابع القراءة.
+<BR>
+<B>
+الوصول الى الجهاز:
+</b>
+<BR>
+دفتر الحسابات يطلب الوصول الى رقم جهازك للتعرف على الجهاز بما يلائم طريقة استخدام البرنامج. لا يوجد أي خطر يترتب على هذه الميزة.
+<BR>
+<BR>
+<B>
+الوصول الى الأسماء:
+</b>
+<BR>
+نحن لا نرسل الاسماء في دفتر العناوين الى اي جهة وايضا لا تصل الينا البتة. كل ما في الامر أن هذه الميزة تسمح لك بتعديل اسماء الحسابات لديك واستيراد رقم الجوال المتصل بها.
+<BR>
+<BR>
+<B>
+الوصول الى الحسابات:
+</b>
+<BR>
+يتطلب دفتر الحسابات الى الوصول الى حساباك في جوجل درايف لأخذ نسخة احتياطية من بياتاتك الى حسابك في جوجل درايف الخاص بك, ليس لدينا اي صلاحيات للوصول الى ملفاتك في جوجل درايف. لن يتم منح هذا الاذن الا بعد اختيار الحساب ومن ثم نقرك على زر موافق.
+</b>
+<BR>
+</p>
+</div>
+
+
+
+<p id="add" onclick="return DisplayItem(2);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+إضافة مبلغ
+</b>
+</p>
+<div id="item2" name="item2"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+        يمكنك ذلك بطريقتين:
+        <br>
+1-         بالنقر على زر إضافة مبلغ <img width=32 height=32  src='ic_menu_add.png'> أسفل الشاشة:
+        <br>
+ستظهر لك صفحة إضافة عملية :
+        <br>
+قم بإدخال الإسم(اذا كان جديدا) أو باختيار الإسم من القائمة التي ستظهر بعد طباعة أول حرف من الإسم.
+        <br>
+يمكنك أيضا تحديد تاريخ العملية بالنقر على التاريخ والذي يحتوي على تاريخ اليوم كقيمة افتراضية.
+        <br>
+بعد النقر على زر حفظ ،سيظهر لك السجل المضاف حيث يمكنك النقر مطولاً ،ليظهر لك زر التعديل والحذف<img width=32 height=32  src='ic_menu_edit.png'><img width=32 height=32  src='ic_menu_delete.png'>.
+        <br>
+
+2-         بالنقر على زر الإضافة <img width=32 height=32  src='ic_input_add.png'>الموجود بجانب الإسم في القائمة الرئيسية.
+<br>
+
+</p>
+</div>
+
+
+
+<p id="add" onclick="return DisplayItem(11);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+طباعة ومشاركة البيانات
+</b>
+</p>
+<div id="item11" name="item11"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+        يوفر دفتر الحسابات العديد من الإمكانيات لمشاركة حساباتك
+        <br>
+		لمشاركة حساب معين, انقر على اسم الحساب ثم زر القائمة
+        <br>
+        <br>
+        <b>
+1-         طباعة
+        </b>
+        <br>
+يمكنك عبر خيار الطباعة تصدير بيانات الحساب الى ملف PDF حيث تسهل طباعته على ورق
+        <br>
+		لا تنسى أنه بإمكانك وضع تفاصيلك حتى تظهر في ملف الطباعة, للمزيد اقرأ قسم الإعدادات
+        <br>
+        <br>
+		
+
+        <b>
+2-         مشاركة
+        </b>
+        <br>
+يمكنك عبر خيار المشاركة ارسال بيانات حساب معين عبر وسائل التواصل الإجتماعي أو الرسائل النصي بعدة صيغ مثل PDF وصورة ونص
+        <br>
+		لا تنسى أنه بإمكانك وضع تفاصيلك حتى تظهر في ملف الطباعة, للمزيد اقرأ قسم الإعدادات
+        <br>
+        <br>
+
+</p>
+</div>
+
+
+
+
+
+
+<p id="add" onclick="return DisplayItem(12);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+الإعدادات
+</b>
+</p>
+<div id="item12" name="item12"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+        <br>
+        <b>
+1-         البيانات الشخصية
+        </b>
+        <br>
+لا خوف من تعبئة بياناتك الشخصية لأنها تضل في حهازك فقط وتستخدم أثناء طباعة أو مشاركة بيانات حساب معين
+        <br>
+		- يمكنك النقر على الصورة لتغييرها بشعارك الخاص
+        <br>
+		- الايميل يستخدم كقيمة افتراضية في حالة النسخ الإحتياطي عبر الإيمل, ومع ذلك يمكنك تغييره قبل الإرسال
+        <br>
+        <br>
+		
+
+        <b>
+2-         خيارات الطباعة
+        </b>
+        <br>
+هذا الجزء من الإعدادات يسمح لك بالتحكم في ما إذا كنت ترغب بتصدير بياناتك الشخصية مع شعارك الخاص بكشف الطباعة
+        <br>
+        <br>
+
+
+        <b>
+3-         خيارات الأمان
+        </b>
+        <br>
+هذا الجزء من الإعدادات يسمح لك بوضع كلمة سر خاص بدفتر الحسابابت.
+        <br>
+        <br>
+        
+
+     <b>
+
+
+ملاحظة مهمة:
+        </b>
+        <br>
+حفاظا على بياناتك ضع كلمة سر سهلة التذكر بالنسبة اليك وصعبة التخمين لغيرك. ينصح بعد وضع الأشياء المعروفة ككلمة سر مثل رقم الجوال أو اسم معين ..... إلخ
+
+        <br>
+        <br>
+
+        <b>
+4-         خيارات العملات والتصنيفات
+        </b>
+        <br>
+هذا الجزء من الإعدادات يسمح لك بالتحكم في اضافة عملة او تصنيف للحسابات
+        <br>
+        <br>
+
+        <b>
+5-         خيارات حفظ البيانات
+        </b>
+        <br>
+هذا الجزء من الإعدادات يسمح لك بالتحكم في الحفظ التلقائي اليومي لبياناتك على جهازك وعلى جوجل درايف
+        <br>
+        <br>
+
+        
+        <b>
+6-         إستعراض البيانات من الكمبيوتر
+        </b>
+        <br>
+هذا الجزء من الإعدادات يسمح لك باستعراض البيانات من اللابتوب او الكمبيوتر أو أي جهاز آخر ضمن الشبكة المحلية لديك
+        <br>
+        <br>
+
+
+   
+
+</p>
+</div>
+
+
+
+
+
+<p id="bal_close" onclick="return DisplayItem(3);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+إغلاق الحساب
+</b>
+</p>
+<div id="item3" name="item3"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+        تمكنك هذه الخاصية من مسح كل السجلات العمليات المسجلة لزبون وتجميعها في عملية واحدة تحتوي الرصيد النهائي.
+        <br>
+انقر على إسم الزبون في القائمة الرئيسية. وفي صفحة التفاصيل انقر على زر الاعدادت ثم على خيار "إغلاق الرصيد".
+
+</p>
+</div>
+
+
+<p id="report" onclick="return DisplayItem(4);"  style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+التقارير
+</b>
+</p>
+<div id="item4" name="item4"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+        يحتوي دفتر الحسابات على مجموعة من التقارير توفر عليك الجهد والوقت.
+        <br>
+يمكنك الوصول الى التقارير بالنقر على زر الإعدادات في الصفحة الرئيسية.
+        <br>
+يمكنك أيضا ترتيب أعمدة التقارير بالنقر على اسم العمود وسيتم بنقرة ترتيب التقرير تصاعديا وفي أخرى تنازليا
+
+</p>
+</div>
+
+<p id="search" onclick="return DisplayItem(5);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+البحث
+</b>
+</p>
+<div id="item5" name="item5"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+يمكنك البحث <img width=32 height=32  src='ic_menu_search.png'> عن (كلمة, تاريخ, مبلغ) أو جزء من ذلك. يمكنك توظيف خاصية البحث لعمل مرشح للبيانات, فمثلاًيمكنك الحصول على عمليات شهر فبراير فقط بادخال النص "2016-02" في خانة البحث.
+
+</p>
+</div>
+
+<p id="sort" onclick="return DisplayItem(6);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+الترتيب
+</b>
+</p>
+<div id="item6" name="item6"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+تمكنك هذه الخاصية من إعادة عرض البيانات بالترتيب المرغوب وذلك بالنقر على إسم العمود. وسيكون في نقرة ترتيب تصاعديا وفي أخرى ترتيب تنازليا.
+
+</p>
+</div>
+
+
+<p id="backup" onclick="return DisplayItem(8);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+حذف/تعديل البيانات
+</b>
+</p>
+<div id="item8" name="item8"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+النقر مطولا على إسم الزبون أو عملية معينة تسمح لك بالتعديل أو الحذف. وذلك بالنقر على رمز التعديل أو الحذف<img width=32 height=32  src='ic_menu_edit.png'> <img width=32 height=32  src='ic_menu_delete.png'> الظاهر أعلى الشاشة.
+</p>
+<br>
+</div>
+
+
+<p id="backup" onclick="return DisplayItem(7);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+حماية قاعدة البيانات/ النسخ الإحتياطي
+</b>
+</p>
+<div id="item7" name="item7"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+<B>
+في حالة ضياع الهاتف أو تلفه لا قدر الله .... ما العمل؟
+</B>
+<BR>
+من المهم للغاية الإحتفاظ بنسخة إحتياطية من بياناتك من وقت لآخر. 
+<BR>
+من القائمة الرئيسية يوجد خيار "حفظ نسخة إحتياطية" والذي يمكنك من مشاركة قاعدة البيانات عبر البلوتوث أو برامج التواصل الإجتماعي أو الإيميل.
+<BR>
+بالمقابل يوجد خيار "إسترجاع قاعدة البيانات" والذي يمكنك من إعادة نسخة محفوظة مسبقا.
+<BR>
+<BR>
+كما يقوم البرنامج بحفظ نسخة احتياطية يوميا على جهازك وعلى جوجل درايف...لتفعيل الحفظ التلقائي على جوجل درايف، ادخل اعدادات ثم خيارات حفظ البيانات ثم تغيير الحساب
+<BR>
+
+</p>
+<br>
+</div>
+
+
+<p id="backup" onclick="return DisplayItem(13);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+التصنيفات والعملات
+</b>
+</p>
+<div id="item13" name="item13"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+<B>
+يمكنك إضافة أكثر من تصنيف او عملة داخل البرنامج 
+</B>
+<BR>
+وذلك من شاشة اعدادات..التصنيفات والعملات ثم إضافة.
+<BR>
+لإستعراضها ،يمكنك المسح على الشاشة الرئيسية يمينا و شمالا.
+
+</p>
+<br>
+</div>
+
+
+<p id="help" onclick="return DisplayItem(9);" style = "background-color: #335ab8;text-align: center;height:25px;color: white;">
+<b>
+التواصل والدعم
+</b>
+</p>
+<div id="item9" name="item9"  style="display:none;" >
+<p style = "font-family: Comic Sans MS, Cursive">
+
+          <br>
+- جوال:
+          <br>
+          +967770203819
+          <br>
+          +967777269411
+          <br><br>
+- البريد الإلكتروني:
+          <br>
+          engmogh@gmail.com
+		  
+          <BR>
+          <BR>
+		  نحن نتواجدأيضا على الواتس أب, ونستمع الى مقتراحاتكم,,, 
+          <br>
+شكرا لإستخدامكم دفتر الحسابات
+<br>
+
+
+</p>
+</div>

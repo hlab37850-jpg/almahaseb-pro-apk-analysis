@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <TableLayout
+        android:id="@+id/bill_hdr"
+        android:background="@drawable/table_row_bg"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <AutoCompleteTextView
+                android:gravity="center"
+                android:id="@+id/item_name"
+                android:nextFocusLeft="@+id/item_qty"
+                android:nextFocusRight="@+id/item_qty"
+                android:nextFocusUp="@+id/item_qty"
+                android:nextFocusDown="@+id/item_qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/item_name"
+                android:singleLine="true"
+                android:layout_weight="1"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/item_qty"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

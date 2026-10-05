@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/search"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"/>
+    <item
+        android:icon="@drawable/pdf"
+        android:id="@+id/print"
+        android:title="@string/action_print"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/adv_search"
+        android:orderInCategory="100"
+        android:title="@string/adv_search"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/print_qty"
+        android:orderInCategory="100"
+        android:title="@string/print_qty"
+        app:showAsAction="never"/>
+    <item
+        android:icon="@drawable/excel"
+        android:id="@+id/excel"
+        android:visible="false"
+        android:title="@string/excel"
+        app:showAsAction="ifRoom"/>
+</menu>

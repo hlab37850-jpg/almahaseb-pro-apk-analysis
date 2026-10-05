@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#718ef6"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:id="@+id/primerdivisor1"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+    <TextView
+        android:textColor="@android:color/black"
+        android:id="@+id/msg_content"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="123"/>
+    <View
+        android:id="@+id/primerdivisor"
+        android:background="@android:color/darker_gray"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"/>
+    <EditText
+        android:textColor="@android:color/black"
+        android:id="@+id/msg_reply"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type Your Message here.."
+        android:lines="3"
+        android:fontFamily="sans-serif"/>
+</LinearLayout>

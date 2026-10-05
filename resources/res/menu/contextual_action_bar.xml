@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    <item
+        android:icon="@android:drawable/ic_menu_delete"
+        android:id="@+id/menu_delete"
+        android:orderInCategory="100"
+        android:title="@string/menu_delete"
+        yourapp:showAsAction="withText|ifRoom"/>
+    <item
+        android:icon="@android:drawable/ic_menu_edit"
+        android:id="@+id/menu_edit"
+        android:orderInCategory="100"
+        android:title="@string/menu_edit"
+        yourapp:showAsAction="withText|ifRoom"/>
+</menu>

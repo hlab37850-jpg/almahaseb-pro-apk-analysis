@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:id="@+id/edit_cus_interface_containter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="100">
+            <com.google.android.material.appbar.AppBarLayout
+                android:theme="@style/AppTheme.AppBarOverlay"
+                android:id="@+id/toolbar_layout"
+                android:fitsSystemWindows="false"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.Toolbar
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/toolbar2"
+                    android:background="@drawable/table_row_bg_m"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            </com.google.android.material.appbar.AppBarLayout>
+            <include layout="@layout/customer_det_pager"/>
+        </LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:layout_gravity="start"
+        android:orientation="vertical"
+        android:id="@+id/slider_list_linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/slider_list_hdr"
+            android:background="@color/gold"
+            android:layout_width="250dp"
+            android:layout_height="100dp">
+            <include layout="@layout/header_logo"/>
+        </LinearLayout>
+        <ListView
+            android:id="@+id/slider_list"
+            android:background="@android:color/white"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:choiceMode="singleChoice"/>
+    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

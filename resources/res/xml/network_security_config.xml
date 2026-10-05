@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">easycard.work
+        </domain>
+        <domain includeSubdomains="true">goinsoft.org
+        </domain>
+        <domain includeSubdomains="true">goin.dyndns.org
+        </domain>
+        <domain includeSubdomains="true">mohaseb.dyndns.org
+        </domain>
+        <domain includeSubdomains="true">bkp2.dyndns.org
+        </domain>
+        <domain includeSubdomains="true">85.114.96.76
+        </domain>
+    </domain-config>
+</network-security-config>

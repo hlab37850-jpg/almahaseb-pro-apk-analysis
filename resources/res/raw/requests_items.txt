@@ -1,0 +1,127 @@
+﻿/* --bills with tr_type=1 */
+/*-- check cus names and currency */
+/*--update trim--*/
+/*-- update requests_items--*/
+ /*--set item_name=trim(item_name),unit_name=trim(unit_name)--*/
+ /*--where status=-1 --*/
+
+ /*--insert base units--*/
+  INSERT into units(name,code)
+  select DISTINCT unit_name ,unit_name from requests_items a
+  where a.status=-1
+  and not EXISTS(select * from units where name=(a.unit_name))  ;
+
+/*--insert item type--*/
+  INSERT into item_type(name)
+  select DISTINCT type_name  from requests_items a
+  where a.status=-1
+  and not EXISTS(select * from item_type where name=(a.type_name))  ;
+
+   update requests_items
+   set type_id=(select id from item_type where name=(type_name))
+   where status=-1  ;
+
+    /*--update online_ref of old data--*/
+      update items
+      set online_ref=(select a.online_ref from requests_items a where status=-1 and a.item_name=items.name)
+      where online_ref=0
+      and exists(select * from requests_items a where status=-1 and a.item_name=items.name);
+    /*--update edited items info--*/
+ update items
+ set name=(select a.item_name from requests_items a where status=-1 and a.online_ref=items.online_ref)
+where  EXISTS(select * from requests_items a where status=-1 and a.online_ref=items.online_ref)
+  and not EXISTS(select * from requests_items a where status=-1
+         and a.item_name  in(select c.name from items c) );
+
+ update items
+  set remarks=(select a.remarks from requests_items a where status=-1 and a.online_ref=items.online_ref)
+ where  EXISTS(select * from requests_items a where status=-1 and a.online_ref=items.online_ref);
+
+/*--new items--*/
+  INSERT into items(name,item_type_id,unit_id,o_date,remarks,online_ref)
+  select DISTINCT  (a.item_name)  name,a.type_id,c.id unit_id ,a.o_date,a.remarks,a.online_ref
+  from requests_items a,units c
+  where a.status=-1
+  and a.unit_name= c.name
+  and not EXISTS(select * from items where name=(a.item_name))
+    and not EXISTS(select * from items where online_ref=(a.online_ref))
+  ;
+
+
+
+
+ update requests_items
+ set item_id=(select id from items where name=(item_name))
+ ,unit_id=(select id from units where name=(unit_name))
+ where status=-1  ;
+
+
+
+ /*--item_unit*/
+  update requests_items_unit
+  set item_name=(item_name)
+  ,unit_name=(unit_name)
+  where EXISTS(select * from requests_items where status=-1  and req_id=requests_items_unit.req_id) ;
+
+ INSERT into units(name,code)
+   select DISTINCT b.unit_name ,b.unit_name from requests_items a,requests_items_unit b
+   where a.status=-1 and a.req_id=b.req_id and a.item_name=b.item_name
+   and not EXISTS(select * from units where name=(b.unit_name))  ;
+
+ update requests_items_unit
+ set item_id=(select id from items where name=(item_name))
+ ,unit_id=(select id from units where name=(unit_name))
+ where exists(select * from requests_items b where b.status=-1
+  and b.req_id=requests_items_unit.req_id and b.item_name=requests_items_unit.item_name) ;
+
+  /*--item price--*/
+ update requests_items_price
+  set item_name=(item_name)
+  ,unit_name=(unit_name)
+   ,curr_name=(curr_name)
+  where EXISTS(select * from requests_items where status=-1  and req_id=requests_items_price.req_id) ;
+
+  INSERT into currency(name,code_name,online_ref)
+   select DISTINCT (curr_name)  name ,(curr_name),curr_id
+   from requests_items a,requests_items_price b where a.status=-1 and a.req_id=b.req_id
+   and a.item_name=b.item_name
+   and not EXISTS(select * from currency where name=(b.curr_name)) ;
+
+    update requests_items_price
+    set item_id=(select id from items where name=(item_name))
+    ,unit_id=(select id from units where name=(unit_name))
+    ,curr_id=(select id from currency where name=(curr_name))
+    where exists(select * from requests_items b where b.status=-1
+     and b.req_id=requests_items_price.req_id and b.item_name=requests_items_price.item_name) ;
+
+
+/*--Insert item unit and update u_val --*/
+delete from unit_item where exists(select a.item_id from requests_items_unit a,requests_items b
+  where b.status=-1 and a.req_id=b.req_id and a.item_id=b.item_id and b.item_id=unit_item.item_id)
+  and not exists(select * from items  a where a.id=item_id and a.unit_id=unit_item.unit_id);
+/*--update base unit_id--*/
+update items set unit_id=(select unit_id from requests_items a where a.status=-1 and a.item_id=items.id)
+where exists(select * from requests_items a where a.status=-1 and a.item_id=items.id);
+ insert into unit_item(item_id,unit_id,u_val)
+ select distinct a.item_id,a.unit_id,a.u_val
+ from requests_items_unit a,requests_items b
+ where b.status=-1 and a.req_id=b.req_id and a.item_id=b.item_id
+ and not exists(select * from unit_item c where c.item_id=a.item_id
+ and c.unit_id=a.unit_id);
+
+/*--Insert item price--*/
+delete from item_price where exists(select a.item_id from requests_items_price a,requests_items b
+    where b.status=-1 and a.req_id=b.req_id and a.item_id=b.item_id
+   and b.item_id=item_price.item_id);
+insert into item_price(item_id,unit_id,curr_id,SLS_u_PRICE,date_)
+ select distinct a.item_id,a.unit_id,a.curr_id,a.sls_u_price,a.date_
+ from requests_items_price a,requests_items b
+ where b.status=-1 and a.req_id=b.req_id and a.item_id=b.item_id
+ and not exists(select * from item_price c where c.item_id=a.item_id
+ and c.unit_id=a.unit_id and c.curr_id=a.curr_id and c.SLS_U_PRICE=a.sls_u_price);
+
+ /*--UPDATE STATUS--*/
+ update requests_items set status=0 where status=-1 and
+  exists(select * from items b where b.id=requests_items.item_id )
+  ;
+

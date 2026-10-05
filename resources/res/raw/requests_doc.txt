@@ -1,0 +1,127 @@
+﻿/* --bills with tr_type=1 */
+/*-- check cus names and currency */
+/*--update trim--*/
+ update doc_hdr
+ set cus_name=(cus_name),cash_name=(cash_name)
+ ,curr_name=(curr_name),p_curr_name=(p_curr_name)
+ where status=-1 and tr_type in(5,6);
+
+
+
+ INSERT into customers(name,acc_p_id)
+ select DISTINCT (cus_name)  name,123 acc_p_id from doc_hdr
+ where status=-1 and tr_type in(5,6)
+ and not EXISTS(select * from customers where name=(cus_name)) ;
+
+
+ INSERT into currency(name,code_name)
+ select DISTINCT (curr_name)  name ,(curr_name)  from doc_hdr where status=-1
+ and not EXISTS(select * from currency where name=(curr_name)) ;
+
+  INSERT into currency(name,code_name)
+  select DISTINCT (p_curr_name)  name ,(p_curr_name)  from doc_hdr where status=-1
+  and not EXISTS(select * from currency where name=(p_curr_name))
+   ;
+
+ update doc_hdr
+ set cus_id=(select id from customers where name=(cus_name))
+ where status=-1 and tr_type in(5,6) ;
+
+
+ update doc_hdr
+ set curr_id=(select id from currency where name=(curr_name))
+ ,p_curr_id=(select id from currency where name=(p_curr_name))
+ where status=-1 and tr_type in(5,6) ;
+
+/*--check items*/
+/*--update trim--*/
+ update doc_det
+ set cus_name=(cus_name)
+ ,cash_name=(cash_name),
+ curr_name=(curr_name),p_curr_name=(p_curr_name)
+ where EXISTS(select * from doc_hdr where status=-1 and tr_type in(5,6)
+  and tr_sys=doc_det.tr_id) ;
+
+
+ INSERT into customers(name,acc_p_id)
+ select DISTINCT (cus_name)  name,123 acc_p_id from doc_det
+ where EXISTS(select * from doc_hdr where status=-1 and tr_type in(5,6)
+         and tr_sys=doc_det.tr_id)
+ and not EXISTS(select * from customers where name=(cus_name)) ;
+
+
+ INSERT into currency(name,code_name)
+ select DISTINCT (curr_name)  name ,(curr_name)
+ from doc_det
+  where EXISTS(select * from doc_hdr where status=-1 and tr_type in(5,6)
+          and tr_sys=doc_det.tr_id)
+ and not EXISTS(select * from currency where name=(curr_name)) ;
+
+ INSERT into currency(name,code_name)
+ select DISTINCT (p_curr_name)  name ,(p_curr_name)
+ from doc_det
+  where EXISTS(select * from doc_hdr where status=-1 and tr_type in(5,6)
+          and tr_sys=doc_det.tr_id)
+ and not EXISTS(select * from currency where name=(p_curr_name)) ;
+
+ update doc_det
+ set curr_id=(select id from currency where name=(curr_name))
+      ,p_curr_id=(select id from currency where name=(p_curr_name))
+
+      ,cus_id=(select id from customers where name=(cus_name))
+ where  EXISTS(select * from doc_hdr where status=-1 and tr_type in(5,6)
+       and tr_sys=doc_det.tr_id)  ;
+
+
+
+/*--Insert bill header--*/
+/*--delete old DOC--*/
+
+ delete from transactions where online in(1,2)
+ and exists( select * from doc_hdr where status=-1 and tr_type=transactions.tr_type
+ and cash_id=transactions.cash_id and p_ref_no=transactions.p_ref_no
+ and online_ref=transactions.p_ref_no
+ and substr(date_,4,2)=substr(transactions.date_,4,2)
+ and bill_id=transactions.bill_id );
+ insert into transactions(p_id,p_amount,p_remarks,p_ref_no
+ 	,cus_id,t_cus_id,out,[in],curr_id,p_curr_id,bill_id,remarks,date_,
+ 	p_date,curr_price,p_curr_price,tr_type,cash_id,curr_mod,online,online_ref )
+ select tr_sys,p_amount,p_remarks,p_ref_no
+         	,cash_id as cus_id,t_cus_id,out,[in],curr_id,p_curr_id,bill_id,remarks,date_,
+         	p_date,curr_price,p_curr_price,tr_type,cash_id,
+         	(case when p_curr_price=0 and curr_price=0 then 0 else 1 end )
+         	curr_mod,2,online_ref
+ from doc_hdr a where status=-1 and tr_type in(5,6)
+  and ROWID=(select max(rowid) from doc_hdr b where a.p_id=b.p_id and a.tr_type=b.tr_type and a.status=b.status);
+
+/*--Insert bill Details --*/
+insert into transactions(p_id,p_amount,p_remarks,p_ref_no
+ 	,cus_id,t_cus_id,out,[in],curr_id,p_curr_id,bill_id,remarks,date_,
+ 	p_date,curr_price,p_curr_price,tr_type,cash_id,
+ 	 curr_mod,online,online_ref )
+ select tr_id,p_amount,p_remarks,p_ref_no
+         	,cus_id,t_cus_id,out,[in],curr_id,p_curr_id,bill_id,remarks,date_,
+         	p_date,curr_price,p_curr_price,tr_type,cash_id,
+         	(case when p_curr_price=0 and curr_price=0 then 0 else 1 end )
+         	 curr_mod,2,
+         	 (select max(c.online_ref) from doc_hdr c where c.status=-1 and c.tr_type in(5,6)
+                                 and c.tr_sys=doc_det.tr_id and c.cash_id=doc_det.cash_id)
+ from doc_det
+  where  EXISTS(select * from doc_hdr c where c.status=-1 and c.tr_type in(5,6)
+        and c.tr_sys=doc_det.tr_id and c.cash_id=doc_det.cash_id
+
+        and ROWID=(select max(rowid) from doc_hdr b where c.p_id=b.p_id and c.tr_type=b.tr_type and c.status=b.status)
+        )  ;
+ /*--UPDATE STATUS--*/
+ update doc_hdr set status=0 where tr_type in(5,6)
+ and exists(select * from transactions b where b.p_id=doc_hdr.tr_sys
+ and b.tr_type in (5,6) and doc_hdr.cash_id=b.cash_id  );
+
+ /*--delete old data--*/
+   delete from doc_det where exists (select * from  requests a,doc_hdr b
+    where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  	and a.id=b.tr_sys and b.tr_sys=doc_det.tr_id  and a.tr_type=b.tr_type );
+
+ 	 delete from doc_hdr where exists (select * from  requests a
+   where a.status=1 and date(a.date_)!=strftime('%Y-%m-%d','now','localtime')
+  and a.id=doc_hdr.tr_sys  and a.tr_type=doc_hdr.tr_type );

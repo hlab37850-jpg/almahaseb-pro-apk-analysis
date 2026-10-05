@@ -1,0 +1,25 @@
+﻿/*--2024-12 --*/
+/*-- drop trigger--*/
+    drop trigger closing_year_update_tr;
+
+/*-- fix curr_price of op_closing(transactions) only before 2024--*/
+    WITH RECURSIVE fibo AS (
+       select  id,curr_price2,date_,curr_id from tran_op_curr_price_issue
+       where curr_price=0 and curr_id!=0 and curr_price2!=0
+       and date(strftime('%Y-%m-%d',substr(date_,7,4)||'-' ||substr(date_,4,2)||'-'||substr(date_,1,2) ))
+       <='2024-01-01'
+)
+    UPDATE transactions
+    SET curr_price = (SELECT curr_price2 FROM fibo WHERE fibo.id = transactions.id and fibo.date_ = transactions.date_ and fibo.curr_id = transactions.curr_id)
+    WHERE (id,date_,curr_id) IN (SELECT id,date_,curr_id FROM fibo);
+
+
+/*-- create trigger: important: (replace ^ by semicolon) --*/
+    CREATE TRIGGER if not exists closing_year_update_tr
+		BEFORE update  ON transactions
+		FOR EACH ROW
+		WHEN (date(strftime('%Y-%m-%d',substr( OLD.date_,7,4)||'-' ||substr( OLD.date_,4,2)||'-'||substr( OLD.date_,1,2) ))<=
+		(select ifnull(max(date_),date(date(strftime('%Y-%m-%d',substr( OLD.date_,7,4)||'-' ||substr( OLD.date_,4,2)||'-'||substr( OLD.date_,1,2) )),'-1 day')) from closing_year))
+		BEGIN
+		SELECT RAISE(ABORT, 'CLOSED YEAR') ^
+		END;
